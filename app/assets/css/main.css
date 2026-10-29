@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/* Design tokens taken from the Penpot file "mac ui" (token set "portfolio"
+   plus values sampled from the Foundations/Home boards). */
+@theme {
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-wallpaper-teal: #809b98;
+  --color-wallpaper-mist: #d5d4cd;
+  --color-card: #f4f3f3;
+  --color-card-cream: #fdfae9;
+  --color-accent-pink: #f1c8cc;
+  --color-accent-green: #cde6c5;
+  --color-ink: #2f3b3a;
+  --color-ink-inverse: #ffffff;
+
+  --radius-card: 24px;
+  --radius-icon: 20px;
+  --radius-window: 14px;
+  --radius-widget: 28px;
+
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+
+  --text-2xs: 10px;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 15px;
+  --text-xl: 16px;
+  --text-2xl: 20px;
+  --text-3xl: 22px;
+  --text-4xl: 24px;
+  --text-5xl: 32px;
+  --text-6xl: 40px;
+
+  --shadow-card: 0 4px 12px rgb(0 0 0 / 0.1);
+  --shadow-icon: 0 2px 4px rgb(0 0 0 / 0.1);
+  --shadow-glass: 0 8px 24px rgb(31 58 56 / 0.18);
+}
+
+@utility glass {
+  background-color: rgb(255 255 255 / 0.28);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(20px);
+}
+
+@utility bg-wallpaper {
+  background: radial-gradient(circle at 50% 50%, var(--color-wallpaper-teal), var(--color-wallpaper-mist));
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+  }
+}
