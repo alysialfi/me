@@ -59,13 +59,13 @@ test('dragging does not change the URL or add history', async ({ page }) => {
 })
 
 test('a direct link opens that app and the with list, not the first-load Notes', async ({ page }) => {
-  await page.goto('/finder/project-x?with=music,bogus')
+  await page.goto('/finder/placeholder-alpha?with=music,bogus')
   await expect(win(page, 'finder')).toBeVisible()
   await expect(win(page, 'music')).toBeVisible()
   await expect(win(page, 'notes')).toHaveCount(0)
   await expect(page.locator('[data-window]')).toHaveCount(2)
   expect(await front(page)).toBe('finder')
-  expect(url(page)).toBe('/finder/project-x?with=music')
+  expect(url(page)).toBe('/finder/placeholder-alpha?with=music')
 })
 
 test('minimized apps are not in the URL', async ({ page }) => {
