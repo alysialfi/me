@@ -13,3 +13,22 @@ export function clampPosition(rect: Rect, screen: Screen): Rect {
   const y = Math.min(Math.max(rect.y, MENU_BAR_HEIGHT), screen.h - TITLE_BAR_HEIGHT)
   return { ...rect, x, y }
 }
+
+export const MIN_WINDOW = { w: 320, h: 240 }
+export type Handle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
+
+// Resizes from `start` by dragging `handle` by (dx, dy). The window never goes below
+// 320x240 and never grows past the screen area below the menu bar.
+export function resizeRect(start: Rect, handle: Handle, dx: number, dy: number, screen: Screen): Rect {
+  let left = start.x
+  let top = start.y
+  let right = start.x + start.w
+  let bottom = start.y + start.h
+
+  if (handle.includes('w')) left = Math.min(Math.max(left + dx, 0), right - MIN_WINDOW.w)
+  if (handle.includes('e')) right = Math.max(Math.min(right + dx, screen.w), left + MIN_WINDOW.w)
+  if (handle.includes('n')) top = Math.min(Math.max(top + dy, MENU_BAR_HEIGHT), bottom - MIN_WINDOW.h)
+  if (handle.includes('s')) bottom = Math.max(Math.min(bottom + dy, screen.h), top + MIN_WINDOW.h)
+
+  return { x: left, y: top, w: right - left, h: bottom - top }
+}

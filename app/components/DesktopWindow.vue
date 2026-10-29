@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import { APPS } from '~/utils/apps'
+import { RESIZE_HANDLES } from '~/composables/useWindowResize'
 import type { AppWindow } from '~/utils/window-manager'
 
 const props = defineProps<{ window: AppWindow, z: number }>()
 const wm = useWindowManager()
 const { onPointerDown: startDrag } = useWindowDrag(props.window.app)
+const { onPointerDown: startResize } = useWindowResize(props.window.app)
+const HANDLE_CLASS: Record<string, string> = {
+  n: 'inset-x-2 top-0 h-1.5 cursor-ns-resize',
+  s: 'inset-x-2 bottom-0 h-1.5 cursor-ns-resize',
+  e: 'inset-y-2 right-0 w-1.5 cursor-ew-resize',
+  w: 'inset-y-2 left-0 w-1.5 cursor-ew-resize',
+  ne: 'right-0 top-0 size-4 cursor-nesw-resize',
+  nw: 'left-0 top-0 size-4 cursor-nwse-resize',
+  se: 'bottom-0 right-0 size-4 cursor-nwse-resize',
+  sw: 'bottom-0 left-0 size-4 cursor-nesw-resize'
+}
 const { $posthog } = useNuxtApp()
 const closeWindow = () => {
   $posthog?.logger.info('desktop window closed', {
@@ -41,5 +53,14 @@ const style = computed(() => ({
     <div class="min-h-0 flex-1 overflow-auto bg-white">
       <AppContent :window="window" />
     </div>
+    <template v-if="window.state === 'normal'">
+      <div
+        v-for="h in RESIZE_HANDLES"
+        :key="h"
+        :data-resize="h"
+        :class="['absolute z-10 touch-none', HANDLE_CLASS[h]]"
+        @pointerdown="startResize(h, $event)"
+      />
+    </template>
   </section>
 </template>
