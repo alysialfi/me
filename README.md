@@ -4,7 +4,7 @@ A macOS/iOS-style portfolio built with Nuxt and Tailwind CSS. Output is static f
 
 ## Requirements
 
-Node 20+ and npm.
+Node 22.5+ (Nuxt Content uses the built-in `node:sqlite`) and npm.
 
 ## Develop
 
