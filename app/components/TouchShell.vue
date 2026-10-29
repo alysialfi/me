@@ -4,6 +4,7 @@ import { DOCK_ORDER } from '~/utils/apps'
 // iPadOS (md) and iOS (below md) home screens, driven by Tailwind breakpoints.
 const wm = useWindowManager()
 const sheets = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'sheet'))
+const overlays = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'overlay'))
 const widgets = [
   { id: 'clock', cls: 'col-span-1 h-[140px]' },
   { id: 'photo-carousel', cls: 'col-span-1 h-[140px]' },
@@ -28,6 +29,7 @@ const widgets = [
       <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" :class="{ 'max-sm:hidden': id === 'music' || id === 'vscode' }" @click="wm.open(id)" />
     </nav>
 
+    <AppOverlay v-for="w in overlays" :key="w.app" :window="w" />
     <AppSheet v-for="w in sheets" :key="w.app" :window="w" />
   </div>
 </template>

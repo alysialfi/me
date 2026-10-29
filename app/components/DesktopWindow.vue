@@ -23,6 +23,7 @@ const style = computed(() => ({
 <template>
   <section
     :data-window="window.app"
+    data-presentation="window"
     :aria-label="APPS[window.app].title"
     class="absolute flex flex-col overflow-hidden rounded-window bg-white shadow-card"
     :style="style"
