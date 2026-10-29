@@ -32,7 +32,7 @@
 
 - [x] 4.1 Build Notes: note list, rich body rendering (text, links, images, video), and link targets for project, app and external URL; verify browser tests for each link target and for video playback
 - [x] 4.2 Build Finder: sorted project folders, folder contents list, back navigation, double-click on desktop and tap on touch; verify browser tests for ordering, opening and back
-- [ ] 4.3 Build the PDF viewer with pdf.js and the image viewer; verify browser tests open a PDF and an image from Finder and return to Finder on close
+- [x] 4.3 Build the PDF viewer with pdf.js and the image viewer; verify browser tests open a PDF and an image from Finder and return to Finder on close
 - [ ] 4.4 Build Contact with clickable email, phone and socials; verify browser tests check the `mailto:` and `tel:` links and that socials open in a new tab
 - [ ] 4.5 Build Photos with All, Personal and Projects albums and a larger-size view; verify a browser test switches album and opens a photo
 - [ ] 4.6 Build the shared audio store and the Music app with play, pause and one-song-at-a-time; verify unit tests on the store and a browser test that playback continues after the Music window closes

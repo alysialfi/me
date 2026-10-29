@@ -42,3 +42,40 @@ test.describe('touch', () => {
     await expect(finder(page).locator('[data-project]')).toHaveCount(2)
   })
 })
+
+test.describe('viewers', () => {
+  test.use({ viewport: { width: 1280, height: 820 } })
+
+  test('a PDF opens in the PDF viewer with all pages; closing returns to Finder', async ({ page }) => {
+    await page.goto('/finder/placeholder-alpha')
+    await finder(page).locator('[data-file="case-study.pdf"]').dblclick()
+    await expect(finder(page).getByTestId('viewer-name')).toHaveText('case-study.pdf')
+    await expect(finder(page).locator('canvas[data-page]')).toHaveCount(2)
+    // pdf.js drew something on the canvas
+    await expect.poll(() => finder(page).locator('canvas[data-page="1"]').evaluate((c: HTMLCanvasElement) => {
+      const d = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data
+      return d.some((v, i) => i % 4 === 0 && v < 128)
+    })).toBe(true)
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/placeholder-alpha/case-study.pdf')
+
+    await finder(page).getByTestId('viewer-close').click()
+    await expect(finder(page).locator('[data-file]')).toHaveCount(3)
+    await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/placeholder-alpha')
+  })
+
+  test('an image opens in the image viewer; closing returns to Finder', async ({ page }) => {
+    await page.goto('/finder/placeholder-alpha')
+    await finder(page).locator('[data-file="screenshot-1.svg"]').dblclick()
+    await expect(finder(page).getByTestId('viewer-name')).toHaveText('screenshot-1.svg')
+    const img = finder(page).getByTestId('image-viewer').locator('img')
+    await expect(img).toBeVisible()
+    expect(await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true)
+    await finder(page).getByTestId('viewer-close').click()
+    await expect(finder(page).locator('[data-file]')).toHaveCount(3)
+  })
+
+  test('a direct link to a file opens the viewer', async ({ page }) => {
+    await page.goto('/finder/placeholder-alpha/screenshot-2.svg')
+    await expect(finder(page).getByTestId('image-viewer')).toBeVisible()
+  })
+})

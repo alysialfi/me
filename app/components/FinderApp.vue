@@ -6,6 +6,8 @@ const wm = useWindowManager()
 const { projects } = await useProjects()
 
 const project = computed(() => projects.value.find(p => p.slug === props.window.view.project))
+const file = computed(() => project.value?.files.find(f => f.name === props.window.view.file))
+const fileUrl = computed(() => `/projects/${project.value?.slug}/${file.value?.name}`)
 const selected = ref<string>()
 
 // Double-click on desktop, a single tap on touch screens.
@@ -19,10 +21,22 @@ function activate(open: () => void, id: string, e: Event) {
 const openProject = (slug: string) => wm.open('finder', { project: slug })
 const openFile = (file: string) => wm.open('finder', { project: props.window.view.project, file })
 const back = () => wm.open('finder', {})
+const closeViewer = () => wm.open('finder', { project: props.window.view.project })
 </script>
 
 <template>
   <div class="flex h-full flex-col" data-testid="finder-app">
+    <template v-if="project && file">
+      <header class="flex min-h-11 shrink-0 items-center gap-xs border-b border-ink/10 px-sm">
+        <button type="button" data-testid="viewer-close" class="min-h-11 pr-xs text-md font-semibold" @click="closeViewer">‹ Close</button>
+        <span class="truncate text-md font-bold" data-testid="viewer-name">{{ file.name }}</span>
+      </header>
+      <div class="min-h-0 flex-1">
+        <PdfViewer v-if="file.type === 'pdf'" :src="fileUrl" class="h-full" />
+        <ImageViewer v-else :src="fileUrl" :name="file.name" />
+      </div>
+    </template>
+    <template v-else>
     <header class="flex min-h-11 shrink-0 items-center gap-xs border-b border-ink/10 px-sm">
       <button v-if="project" type="button" data-testid="finder-back" class="min-h-11 pr-xs text-md font-semibold" @click="back">‹ Back</button>
       <span class="text-md font-bold" data-testid="finder-path">{{ project ? project.name : 'Projects' }}</span>
@@ -58,5 +72,6 @@ const back = () => wm.open('finder', {})
       </li>
       <li v-if="!project.files.length" class="col-span-full text-md text-ink/70">This folder is empty.</li>
     </ul>
+    </template>
   </div>
 </template>
