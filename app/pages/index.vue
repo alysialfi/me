@@ -1,5 +1,5 @@
 <template>
   <ClientOnly>
-    <DesktopShell />
+    <HomeScreen />
   </ClientOnly>
 </template>
