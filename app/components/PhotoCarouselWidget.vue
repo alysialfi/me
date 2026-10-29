@@ -1,0 +1,35 @@
+<script setup lang="ts">
+const wm = useWindowManager()
+const { photos } = await usePhotos()
+const index = ref(0)
+const current = computed(() => photos.value[index.value])
+
+// Advances every few seconds; picking a dot jumps to that photo.
+let timer: ReturnType<typeof setInterval> | undefined
+const advance = () => { if (photos.value.length) index.value = (index.value + 1) % photos.value.length }
+const restart = () => { clearInterval(timer); timer = setInterval(advance, 4000) }
+onMounted(restart)
+onUnmounted(() => clearInterval(timer))
+function pick(i: number) { index.value = i; restart() }
+</script>
+
+<template>
+  <div class="relative h-full w-full" data-testid="carousel-widget">
+    <button type="button" class="block size-full" aria-label="Open Photos" data-testid="carousel-open" @click="wm.open('photos')">
+      <img v-if="current" :src="current.image" :alt="current.caption" class="size-full object-cover" data-testid="carousel-photo">
+    </button>
+    <div class="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1.5" data-testid="carousel-dots">
+      <button
+        v-for="(p, i) in photos"
+        :key="p.id"
+        type="button"
+        :aria-label="`Show photo ${i + 1}`"
+        :aria-current="i === index ? 'true' : undefined"
+        class="pointer-events-auto flex size-4 items-center justify-center"
+        @click.stop="pick(i)"
+      >
+        <span :class="[i === index ? 'bg-ink' : 'bg-ink/30', 'size-1.5 rounded-full']" />
+      </button>
+    </div>
+  </div>
+</template>
