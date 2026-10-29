@@ -8,4 +8,5 @@ defineProps<{ id: WidgetId }>()
   <ClockWidget v-if="id === 'clock'" />
   <PhotoCarouselWidget v-else-if="id === 'photo-carousel'" />
   <CalendarWidget v-else-if="id === 'calendar'" />
+  <NotesWidget v-else-if="id === 'notes'" />
 </template>
