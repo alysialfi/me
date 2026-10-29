@@ -27,6 +27,63 @@ A link inside a note SHALL either open a project in Finder, open another app, or
 - **WHEN** a visitor activates a link in a note whose target is an external URL
 - **THEN** the page opens in a new tab and the portfolio stays open
 
+### Requirement: App paths
+The focused app SHALL be reflected in the URL path: `/notes/<note>`, `/finder/<project>/<file>`, `/photos/<album>`, `/contact`, `/music` and `/vscode`. The home screen is `/`. Deeper segments are optional.
+
+#### Scenario: Path follows the focused app
+- **WHEN** a visitor opens the Finder folder of a project
+- **THEN** the URL path becomes `/finder/<project>`
+
+#### Scenario: Open a file
+- **WHEN** a visitor opens a file in a project
+- **THEN** the URL path becomes `/finder/<project>/<file>`
+
+#### Scenario: Direct link
+- **WHEN** a visitor loads a URL such as `/finder/<project>` directly
+- **THEN** the home screen is shown with that app focused on that content, and the first-load About me note is not opened
+
+#### Scenario: Unknown path
+- **WHEN** a visitor loads a path that names no app, project, file, note or album
+- **THEN** the home screen is shown with a not-found notice, and no blank page appears
+
+### Requirement: Other open apps in the query
+On desktop, apps that are open but not focused SHALL be listed in the `with` query parameter as comma-separated app names, for example `/finder/<project>?with=notes,music`.
+
+#### Scenario: Several windows open
+- **WHEN** Finder is focused and Notes and Music are also open
+- **THEN** the URL is `/finder/<project>?with=notes,music`
+
+#### Scenario: Load a shared link
+- **WHEN** a visitor loads a URL with a `with` list on a desktop screen
+- **THEN** the focused app and each listed app are open, the listed apps showing their default view
+
+#### Scenario: Minimized apps
+- **WHEN** an app is minimized
+- **THEN** it is not listed in the URL, and it is not open after a reload
+
+#### Scenario: Unknown name in the list
+- **WHEN** the `with` list contains a name that is not an app
+- **THEN** that name is ignored and the rest open
+
+### Requirement: URL and history
+Opening, focusing or closing an app SHALL update the URL and add a history entry, so back and forward move between those states. Moving or resizing a window SHALL NOT change the URL.
+
+#### Scenario: Back button
+- **WHEN** a visitor opens Finder and then presses back
+- **THEN** the previous app state is shown
+
+#### Scenario: Close the focused window
+- **WHEN** a visitor closes the focused window while others are open
+- **THEN** the next window in front becomes focused and the URL path follows it
+
+#### Scenario: Close the last window
+- **WHEN** a visitor closes the only open window
+- **THEN** the URL becomes `/` and the home screen is shown
+
+#### Scenario: Drag does not navigate
+- **WHEN** a visitor drags a window
+- **THEN** the URL and history stay the same
+
 ## MODIFIED Requirements
 
 ### Requirement: Photos app

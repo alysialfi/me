@@ -9,6 +9,10 @@ When the home screen first loads, the Notes app SHALL already be open on the "Ab
 - **WHEN** a visitor loads the portfolio
 - **THEN** the home screen is visible with the Notes window open on the "About me" note, and Finder is not open
 
+#### Scenario: Initial note and URL
+- **WHEN** a visitor loads `/`
+- **THEN** the About me note is open and the URL stays `/` until the visitor opens another app
+
 #### Scenario: Close the initial note
 - **WHEN** a visitor closes the initial Notes window
 - **THEN** the home screen is shown and the Notes window does not reopen until the visitor opens Notes again
@@ -16,6 +20,17 @@ When the home screen first loads, the Notes app SHALL already be open on the "Ab
 #### Scenario: Reopen Notes
 - **WHEN** a visitor opens Notes again after closing it
 - **THEN** Notes opens on the "About me" note
+
+### Requirement: Dock shows open apps
+On desktop the dock SHALL show an indicator under each app that has an open or minimized window.
+
+#### Scenario: Running indicator
+- **WHEN** an app has an open or minimized window
+- **THEN** its dock icon shows the indicator, and the indicator disappears when the window is closed
+
+#### Scenario: Dock click on an open app
+- **WHEN** a visitor activates the dock icon of an app that already has a window
+- **THEN** that window is brought to the front, restored if minimized, instead of opening a second one
 
 ## MODIFIED Requirements
 

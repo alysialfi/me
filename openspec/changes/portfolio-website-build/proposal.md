@@ -14,6 +14,7 @@ The Penpot design for the macOS/iOS-style portfolio is done and archived (`portf
 - Photos is one gallery that mixes personal photos and project screenshots.
 - Music plays and pauses real audio from the owner's favorite songs. The home screen music widget stays in sync.
 - VS Code shows a read-only code snippet of the owner's current project.
+- The focused app is shown in the URL path (for example `/finder/project-x`) so links can be shared. On desktop, several draggable windows can be open at once, with the others listed in a `with` query.
 - On tablet and phone, Notes opens first as a windowed overlay. Any app opened afterwards is full-screen, and closing it returns to the home screen.
 - All portfolio content (notes, projects, photos, songs, contact, snippet, history) lives in the repo as files the owner edits, not in a backend.
 
