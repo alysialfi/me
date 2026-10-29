@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { DOCK_ORDER } from '~/utils/apps'
+import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
 
 // iPadOS (md) and iOS (below md) home screens, driven by Tailwind breakpoints.
 const wm = useWindowManager()
@@ -18,7 +19,9 @@ const widgets = [
   <div data-testid="touch-home" class="bg-wallpaper fixed inset-0 overflow-y-auto overflow-x-hidden">
     <StatusBar />
     <div data-testid="widget-grid" class="grid grid-cols-2 gap-3 px-4 pb-[120px] pt-[60px] sm:gap-4 sm:px-6 md:gap-6 md:px-8 md:pb-[140px]">
-      <div v-for="w in widgets" :key="w.id" :data-widget="w.id" :class="[w.cls, 'glass rounded-card']" />
+      <div v-for="w in widgets" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
+        <HomeWidget :id="w.id as WidgetId" />
+      </div>
       <div data-testid="app-grid" class="col-span-2 mt-3 flex gap-5 sm:hidden">
         <AppIcon v-for="id in (['music', 'vscode'] as const)" :key="id" :app="id" size="sm" @click="wm.open(id)" />
       </div>

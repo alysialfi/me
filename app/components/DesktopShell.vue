@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
 const wm = useWindowManager()
 // 12-column grid, 24px gutters, widgets placed per the Penpot Home / xl board.
 const widgets = [
@@ -18,9 +19,11 @@ const widgets = [
         v-for="w in widgets"
         :key="w.id"
         :data-widget="w.id"
-        :class="[w.cls, 'glass row-start-1 self-start rounded-card']"
+        :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'row-start-1 self-start overflow-hidden rounded-card']"
         :style="{ marginTop: `${w.top}px`, height: `${w.h}px` }"
-      />
+      >
+        <HomeWidget :id="w.id as WidgetId" />
+      </div>
     </div>
     <DesktopWindow v-for="(win, i) in wm.visible.value" :key="win.app" :window="win" :z="10 + i" />
     <Dock />
