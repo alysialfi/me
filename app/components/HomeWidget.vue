@@ -9,4 +9,5 @@ defineProps<{ id: WidgetId }>()
   <PhotoCarouselWidget v-else-if="id === 'photo-carousel'" />
   <CalendarWidget v-else-if="id === 'calendar'" />
   <NotesWidget v-else-if="id === 'notes'" />
+  <MusicWidget v-else-if="id === 'music'" />
 </template>
