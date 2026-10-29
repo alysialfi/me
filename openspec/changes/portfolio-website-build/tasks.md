@@ -21,7 +21,7 @@
 - [x] 3.4 Open Notes on "About me" as a windowed overlay on first load at every size; verify browser tests at 390, 768 and 1280px, including close and reopen behavior from `home-screen`
 - [x] 3.5 Make later apps open full-screen below lg and as windows at lg and above, keeping the open apps across a resize over lg, with only the focused app shown below lg; verify a browser test that resizes while apps are open and that extras return at lg
 - [x] 3.6 Check touch target sizes below lg; verify a browser test asserts every app icon and control is at least 44 by 44 px at 390px
-- [ ] 3.7 Support several open windows on desktop with focus by click and front-most stacking; verify unit tests on the open list and a browser test that opens two apps and focuses the one behind
+- [x] 3.7 Support several open windows on desktop with focus by click and front-most stacking; verify unit tests on the open list and a browser test that opens two apps and focuses the one behind
 - [ ] 3.8 Add draggable windows by title bar, clamped so the title bar stays on screen, disabled below lg; verify browser tests for drag, edge clamping and no drag at 390px
 - [ ] 3.9 Add resizing by edges and corners with a 320 by 240 pixel minimum and a full-screen maximum; verify unit tests on the clamping and browser tests for min and max
 - [ ] 3.10 Add the red, yellow and green window controls (close, minimize to dock, toggle full screen with restore), dock open indicators and restore from the dock; verify browser tests for each control, restoring the previous size and a dock click not opening a second window
