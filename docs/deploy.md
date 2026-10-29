@@ -29,7 +29,7 @@ Whatever server you use must do three things:
 
 1. **Fall back to the home page.** A path with no matching file (for example `/finder/my-project/spec.pdf`, or a mistyped URL) must return `/200.html` with status **200**. The site then shows the right app, or its "not found" notice.
 2. **Serve range requests** for audio and video (`Accept-Ranges: bytes`). nginx and Caddy do this for static files by default.
-3. **Serve `.wasm` as `application/wasm`.** The site's content search uses WebAssembly; a wrong type is logged as a console error and slows loading. Current nginx and Caddy already do this.
+3. **Serve `.wasm` as `application/wasm`.** The site's content search uses WebAssembly; a wrong type is logged as a console error and slows loading. Recent nginx and Caddy versions usually do this already; check with `curl -I https://example.com/_nuxt/<any>.wasm` if you see the error.
 
 Also recommended: HTTPS, gzip or brotli compression, and long caching for the `/_nuxt/` folder (its files are named by content hash).
 
