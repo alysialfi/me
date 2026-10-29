@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, expect, test } from 'vitest'
-import { checkAboutMe, checkProjectFiles } from '../../shared/content-checks'
+import { checkAboutMe, checkProjectFiles, knownContent, prerenderRoutes } from '../../shared/content-checks'
 
 const dirs: string[] = []
 const tmp = () => { const d = mkdtempSync(join(tmpdir(), 'content-')); dirs.push(d); return d }
@@ -38,4 +38,16 @@ test('build fails naming an unsupported project file', () => {
   mkdirSync(join(projects, 'x'))
   writeFileSync(join(projects, 'x', 'notes.docx'), '')
   expect(() => checkProjectFiles(projects)).toThrow(/Unsupported project file "x\/notes\.docx"/)
+})
+
+test('known content lists notes, projects and files, and prerender routes skip file paths', () => {
+  const root = tmp()
+  mkdirSync(join(root, 'notes')); mkdirSync(join(root, 'projects/x'), { recursive: true })
+  writeFileSync(join(root, 'notes/about-me.md'), '')
+  writeFileSync(join(root, 'projects/x/doc.pdf'), '')
+  const known = knownContent(root)
+  expect(known).toEqual({ notes: ['about-me'], projects: { x: ['doc.pdf'] } })
+  const routes = prerenderRoutes(known)
+  expect(routes).toEqual(expect.arrayContaining(['/', '/finder', '/notes/about-me', '/finder/x', '/photos/personal']))
+  expect(routes.some(r => r.endsWith('.pdf'))).toBe(false)
 })

@@ -31,5 +31,6 @@ const widgets = [
 
     <AppOverlay v-for="w in overlays" :key="w.app" :window="w" />
     <AppSheet v-for="w in sheets" :key="w.app" :window="w" />
+    <NotFoundNotice />
   </div>
 </template>

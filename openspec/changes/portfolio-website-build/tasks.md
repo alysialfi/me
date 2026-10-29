@@ -26,7 +26,7 @@
 - [x] 3.9 Add resizing by edges and corners with a 320 by 240 pixel minimum and a full-screen maximum; verify unit tests on the clamping and browser tests for min and max
 - [x] 3.10 Add the red, yellow and green window controls (close, minimize to dock, toggle full screen with restore), dock open indicators and restore from the dock; verify browser tests for each control, restoring the previous size and a dock click not opening a second window
 - [x] 3.11 Add the route parser and URL sync (path for the focused app, `with` query for others, history entries on open, focus and close, nothing on drag) with the catch-all page; verify unit tests on parsing including unknown names and a browser test for back, close-focused and close-last
-- [ ] 3.12 Add the not-found notice and generate known routes statically; verify `nuxt generate` outputs HTML for sample app, note and project paths and a browser test shows the notice for an unknown path
+- [x] 3.12 Add the not-found notice and generate known routes statically; verify `nuxt generate` outputs HTML for sample app, note and project paths and a browser test shows the notice for an unknown path
 
 ## 4. Apps (`portfolio-apps`)
 

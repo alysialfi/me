@@ -1,5 +1,6 @@
 import { createWindowManager } from '~/utils/window-manager'
 import { startUrlSync } from '~/utils/url-sync'
+import type { KnownContent } from '~/utils/routes'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { width, mode } = useViewport()
@@ -11,7 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     window.addEventListener('resize', update)
     // Build the window set from the first URL (shared links, first-load Notes at /).
     nuxtApp.hook('app:mounted', () => {
-      startUrlSync({ wm, router: useRouter(), notFound })
+      startUrlSync({ wm, router: useRouter(), notFound, known: () => useRuntimeConfig().public.knownContent as KnownContent })
     })
   }
   return { provide: { wm } }

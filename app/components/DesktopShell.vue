@@ -24,5 +24,6 @@ const widgets = [
     </div>
     <DesktopWindow v-for="(win, i) in wm.visible.value" :key="win.app" :window="win" :z="10 + i" />
     <Dock />
+    <NotFoundNotice />
   </div>
 </template>

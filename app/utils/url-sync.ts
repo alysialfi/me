@@ -53,14 +53,18 @@ export function startUrlSync({ wm, router, notFound, known }: Options) {
   })
 
   let lastMode = wm.mode.value
-  watch(() => [JSON.stringify(desired()), wm.mode.value] as const, async ([, mode]) => {
-    if (applying) return
+  let lastKey = ''
+  watch(() => [JSON.stringify(desired()), wm.mode.value] as const, async ([key, mode]) => {
+    if (applying) { lastKey = key; return }
     const { path, query } = desired()
     const current = router.currentRoute.value
     const same = current.path === path && (current.query.with ?? undefined) === query.with
     const modeChanged = mode !== lastMode
     lastMode = mode
-    if (same) return
+    // A not-found URL stays until the windows change.
+    if (same || key === lastKey) { lastKey = key; return }
+    lastKey = key
+    notFound.value = false
     pushing++
     try {
       if (modeChanged) await router.replace({ path, query, state: stateOf() })
