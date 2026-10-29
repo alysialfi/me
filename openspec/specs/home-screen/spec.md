@@ -83,3 +83,10 @@ Widgets and app icons SHALL share one visual language: rounded cards, a soft pas
 #### Scenario: Widgets look related
 - **WHEN** the home screen is reviewed in the design file
 - **THEN** every widget uses the same corner radius, palette and spacing tokens
+
+### Requirement: Typography
+All interface text, including the menu bar, widgets and app windows, SHALL use the Plus Jakarta Sans typeface. Code snippets MAY use a monospace typeface.
+
+#### Scenario: Typeface across screens
+- **WHEN** any screen or app is reviewed
+- **THEN** its interface text is set in Plus Jakarta Sans, and only code snippets use a monospace font
