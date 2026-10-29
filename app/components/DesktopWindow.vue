@@ -4,6 +4,7 @@ import type { AppWindow } from '~/utils/window-manager'
 
 const props = defineProps<{ window: AppWindow, z: number }>()
 const wm = useWindowManager()
+const { onPointerDown: startDrag } = useWindowDrag(props.window.app)
 const { $posthog } = useNuxtApp()
 const closeWindow = () => {
   $posthog?.logger.info('desktop window closed', {
@@ -29,7 +30,7 @@ const style = computed(() => ({
     :style="style"
     @pointerdown="wm.focus(window.app)"
   >
-    <header class="flex h-10 shrink-0 items-center gap-xs bg-card px-sm" data-testid="title-bar">
+    <header class="flex h-10 shrink-0 cursor-default touch-none select-none items-center gap-xs bg-card px-sm" data-testid="title-bar" @pointerdown="startDrag">
       <div class="group flex items-center gap-xs">
         <button type="button" aria-label="Close" data-control="close" class="size-3 rounded-full bg-[#ff5f57]" @click.stop="closeWindow" />
         <button type="button" aria-label="Minimize" data-control="minimize" class="size-3 rounded-full bg-[#febc2e]" />
