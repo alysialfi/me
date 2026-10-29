@@ -1,15 +1,17 @@
 import { createWindowManager } from '~/utils/window-manager'
+import { startUrlSync } from '~/utils/url-sync'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { width, mode } = useViewport()
   const wm = createWindowManager(mode)
+  const notFound = useState('not-found', () => false)
   if (import.meta.client) {
     const update = () => { width.value = window.innerWidth }
     update()
     window.addEventListener('resize', update)
-    // First load of the home page: Notes already open on "About me".
+    // Build the window set from the first URL (shared links, first-load Notes at /).
     nuxtApp.hook('app:mounted', () => {
-      if (useRoute().path === '/') wm.open('notes', undefined, { overlay: true })
+      startUrlSync({ wm, router: useRouter(), notFound })
     })
   }
   return { provide: { wm } }

@@ -21,6 +21,8 @@ export interface AppWindow {
   overlay: boolean
 }
 
+export type WindowSnapshot = Pick<AppWindow, 'app' | 'view' | 'state' | 'minimizedFrom' | 'overlay'>
+
 export const DEFAULT_SIZE = { w: 640, h: 420 }
 
 export function createWindowManager(mode: Ref<ViewportMode>) {
@@ -109,10 +111,29 @@ export function createWindowManager(mode: Ref<ViewportMode>) {
     if (w) w.rect = { ...rect }
   }
 
+  // Plain-data copy of the open windows, stored in history entries.
+  const snapshot = (): WindowSnapshot[] =>
+    windows.value.map(w => ({ app: w.app, view: { ...w.view }, state: w.state, minimizedFrom: w.minimizedFrom, overlay: w.overlay }))
+
+  // Replace the open windows, keeping the position and size of apps that stay open.
+  function restore(entries: WindowSnapshot[]) {
+    const old = new Map(windows.value.map(w => [w.app, w]))
+    windows.value = entries.map((e, n) => {
+      const prev = old.get(e.app)
+      return reactive<AppWindow>({
+        ...e,
+        view: { ...e.view },
+        rect: prev ? { ...prev.rect } : { x: 120 + n * 28, y: 80 + n * 28, ...DEFAULT_SIZE },
+        restoreRect: prev?.restoreRect ? { ...prev.restoreRect } : undefined
+      })
+    })
+    homeShown.value = false
+  }
+
   // Dock indicator: an open or minimized window exists.
   const isOpen = (app: AppId) => !!find(app)
 
-  return { mode, windows, focused, visible, presentation, open, close, focus, minimize, toggleFullscreen, setRect, isOpen }
+  return { mode, windows, focused, visible, presentation, open, close, focus, minimize, toggleFullscreen, setRect, isOpen, snapshot, restore }
 }
 
 export type WindowManager = ReturnType<typeof createWindowManager>
