@@ -2,10 +2,10 @@
 
 ## 1. Project setup
 
-- [ ] 1.1 Scaffold a Nuxt + TypeScript app with Tailwind CSS on branch `develop`; verify `npm run dev` serves a blank page and `npx nuxt generate` succeeds
-- [ ] 1.2 Add a unit test runner (Vitest) and a browser test runner (Playwright); verify one trivial test of each type passes
-- [ ] 1.3 Read tokens (colors, radii, spacing, font sizes, glass effect) from the Penpot file "mac ui" into the Tailwind theme; verify a token page renders each token and matches the design
-- [ ] 1.4 Add a README with dev, test, build and static-hosting steps; verify the documented commands run as written
+- [x] 1.1 Scaffold a Nuxt + TypeScript app with Tailwind CSS on branch `develop`; verify `npm run dev` serves a blank page and `npx nuxt generate` succeeds
+- [x] 1.2 Add a unit test runner (Vitest) and a browser test runner (Playwright); verify one trivial test of each type passes
+- [x] 1.3 Read tokens (colors, radii, spacing, font sizes, glass effect) from the Penpot file "mac ui" into the Tailwind theme; verify a token page renders each token and matches the design
+- [x] 1.4 Add a README with dev, test, build and static-hosting steps; verify the documented commands run as written
 
 ## 2. Content layer (`portfolio-content`)
 
