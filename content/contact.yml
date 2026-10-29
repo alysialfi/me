@@ -1,0 +1,8 @@
+fullName: Placeholder Name
+email: placeholder@example.com
+phone: "+00 000 000 0000"
+socials:
+  - label: GitHub (placeholder)
+    url: https://github.com/
+  - label: LinkedIn (placeholder)
+    url: https://www.linkedin.com/

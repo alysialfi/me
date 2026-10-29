@@ -1,0 +1,7 @@
+file: placeholder.ts
+language: typescript
+code: |
+  // Placeholder snippet: replace with code from your current project.
+  export function greet(name: string): string {
+    return `Hello, ${name}!`
+  }
