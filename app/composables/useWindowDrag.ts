@@ -8,7 +8,7 @@ export function useWindowDrag(app: AppId) {
   function onPointerDown(e: PointerEvent) {
     if (e.button !== 0 || (e.target as HTMLElement).closest('button')) return
     const win = wm.windows.value.find(w => w.app === app)
-    if (!win) return
+    if (!win || win.state !== 'normal') return
     const bar = e.currentTarget as HTMLElement
     bar.setPointerCapture(e.pointerId)
     const start = { px: e.clientX, py: e.clientY, rect: { ...win.rect } }
