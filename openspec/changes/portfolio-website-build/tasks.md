@@ -15,7 +15,7 @@
 
 ## 3. Shell and window manager
 
-- [ ] 3.1 Build the viewport composable on Tailwind breakpoints and the window-manager store (open app, selection, mode); verify unit tests for open, close and mode changes across lg
+- [x] 3.1 Build the viewport composable on Tailwind breakpoints and the window-manager store (open app, selection, mode); verify unit tests for open, close and mode changes across lg
 - [ ] 3.2 Build the desktop shell (menu bar, wallpaper, floating dock, 12-column widget grid) and the desktop window component with close control; verify a browser test at 1280px shows menu bar, dock and a window opening and closing
 - [ ] 3.3 Build the iPadOS (md) and iOS (below md) shells with status bar, app grid, bottom dock and full-screen sheet with close control; verify browser tests at 390px and 768px
 - [ ] 3.4 Open Notes on "About me" as a windowed overlay on first load at every size; verify browser tests at 390, 768 and 1280px, including close and reopen behavior from `home-screen`
