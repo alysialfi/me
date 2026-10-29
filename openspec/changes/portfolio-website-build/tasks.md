@@ -51,7 +51,7 @@
 
 - [x] 6.1 Run the full browser suite at 390, 768, 1024 and 1280px; verify all pass
 - [ ] 6.2 Compare each breakpoint with its Penpot board and fix visible differences; verify side-by-side screenshots are reviewed with the owner
-- [ ] 6.3 Run `npx nuxt generate` and serve the output with a local static server with range requests; verify navigation, audio, PDF and direct loads of nested paths (fallback to the home page for unknown ones) work with no console errors
+- [x] 6.3 Run `npx nuxt generate` and serve the output with a local static server with range requests; verify navigation, audio, PDF and direct loads of nested paths (fallback to the home page for unknown ones) work with no console errors
 - [ ] 6.4 Document how the owner edits each content type and how to deploy the static output to their server; verify a fresh checkout follows the document successfully
 
 ## Workflow follow-up

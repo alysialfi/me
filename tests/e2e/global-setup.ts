@@ -6,7 +6,7 @@ export default async function globalSetup() {
   const page = await browser.newPage()
   for (let i = 0; i < 3; i++) {
     try {
-      await page.goto('http://localhost:3100/', { waitUntil: 'networkidle', timeout: 60_000 })
+      await page.goto(`http://localhost:${process.env.E2E_STATIC ? 3200 : 3100}/`, { waitUntil: 'networkidle', timeout: 60_000 })
       await page.waitForSelector('[data-testid="dock"]', { timeout: 15_000 })
       break
     } catch { /* the dev server reloads once after optimising; try again */ }
