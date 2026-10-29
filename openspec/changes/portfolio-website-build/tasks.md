@@ -42,7 +42,7 @@
 
 - [x] 5.1 Build the clock widget (hh:mm, updates); verify a unit test with a fake clock
 - [x] 5.2 Build the photo carousel widget from the Photos content and open Photos on activation; verify a browser test
-- [ ] 5.3 Build the calendar widget grouped by year with the accent bar, title and period, including "present"; verify unit tests on grouping and a visual check against the design
+- [x] 5.3 Build the calendar widget grouped by year with the accent bar, title and period, including "present"; verify unit tests on grouping and a visual check against the design
 - [ ] 5.4 Build the notes widget with note rows that open that note; verify a browser test
 - [ ] 5.5 Build the music widget sharing state with the Music app; verify a browser test that play in the widget updates the app and the reverse
 - [ ] 5.6 Check widget widths on the 12-column grid; verify a browser test that measures spans at 1280px (clock 2, photo carousel 3, notes 3, calendar 4, music 4)
