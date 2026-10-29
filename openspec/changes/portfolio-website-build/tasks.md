@@ -10,7 +10,7 @@
 ## 2. Content layer (`portfolio-content`)
 
 - [x] 2.1 Add Nuxt Content and define the content directories and schemas for notes, projects, photos, songs, contact, snippet and history; verify schema tests reject entries missing required fields
-- [ ] 2.2 Add build-time checks for a missing "About me" designation and unsupported project file types; verify tests show the build fails with the messages in the spec
+- [x] 2.2 Add build-time checks for a missing "About me" designation and unsupported project file types; verify tests show the build fails with the messages in the spec
 - [ ] 2.3 Add labelled placeholder content for every type, including a note with text, link, image and video, and projects with PDFs and images; verify every content type returns at least one item in a test
 
 ## 3. Shell and window manager
