@@ -6,7 +6,7 @@ const formatDate = (d: string) => new Date(`${d}T00:00:00`).toLocaleDateString('
 
 <template>
   <div class="flex h-full flex-col gap-[10px] overflow-y-auto px-[14px] py-[16px]" data-testid="notes-widget">
-    <button type="button" class="flex min-h-11 shrink-0 items-center gap-[10px]" aria-label="Open Notes" data-testid="notes-widget-header" @click="wm.open('notes')">
+    <button type="button" class="flex min-h-11 shrink-0 items-center gap-[10px] lg:min-h-8" aria-label="Open Notes" data-testid="notes-widget-header" @click="wm.open('notes')">
       <span class="flex size-8 shrink-0 flex-col justify-center gap-[4px] rounded-full bg-[#e9983a] px-[9px]" aria-hidden="true">
         <i v-for="n in 3" :key="n" class="block h-0.5 rounded-full bg-white" />
       </span>

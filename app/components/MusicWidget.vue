@@ -27,15 +27,15 @@ const step = (delta: number) => {
     <div class="h-1 shrink-0 rounded-full bg-ink/15" role="progressbar" :aria-valuenow="Math.round(progress)" aria-valuemin="0" aria-valuemax="100">
       <div class="h-full rounded-full bg-wallpaper-teal" :style="{ width: `${progress}%` }" data-testid="widget-progress" />
     </div>
-    <div class="flex items-center justify-center gap-7">
-      <button type="button" aria-label="Previous song" data-testid="widget-prev" class="flex size-11 items-center justify-center" @click="step(-1)">
+    <div class="flex items-center justify-center gap-7 lg:gap-7">
+      <button type="button" aria-label="Previous song" data-testid="widget-prev" class="flex size-11 items-center justify-center lg:size-6" @click="step(-1)">
         <svg viewBox="0 0 10 16" class="h-4 w-2.5 fill-ink"><path d="M10 0v16L0 8z" /></svg>
       </button>
-      <button type="button" :aria-label="playing ? 'Pause' : 'Play'" :data-state="playing ? 'playing' : 'paused'" data-testid="widget-play" class="flex size-11 items-center justify-center" @click="audio.toggle(song)">
+      <button type="button" :aria-label="playing ? 'Pause' : 'Play'" :data-state="playing ? 'playing' : 'paused'" data-testid="widget-play" class="flex size-11 items-center justify-center lg:size-6" @click="audio.toggle(song)">
         <svg v-if="!playing" viewBox="0 0 20 24" class="h-6 w-5 fill-ink"><path d="M0 0l20 12L0 24z" /></svg>
         <svg v-else viewBox="0 0 20 24" class="h-6 w-5 fill-ink"><path d="M1 0h6v24H1zM13 0h6v24h-6z" /></svg>
       </button>
-      <button type="button" aria-label="Next song" data-testid="widget-next" class="flex size-11 items-center justify-center" @click="step(1)">
+      <button type="button" aria-label="Next song" data-testid="widget-next" class="flex size-11 items-center justify-center lg:size-6" @click="step(1)">
         <svg viewBox="0 0 10 16" class="h-4 w-2.5 fill-ink"><path d="M0 0v16l10-8z" /></svg>
       </button>
     </div>

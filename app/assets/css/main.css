@@ -45,6 +45,7 @@
 
 @utility glass {
   background-color: rgb(255 255 255 / 0.28);
+  border: 1.5px solid rgb(255 255 255 / 0.7);
   box-shadow: var(--shadow-glass);
   backdrop-filter: blur(20px);
 }
