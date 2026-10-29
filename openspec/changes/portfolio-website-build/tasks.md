@@ -35,7 +35,7 @@
 - [x] 4.3 Build the PDF viewer with pdf.js and the image viewer; verify browser tests open a PDF and an image from Finder and return to Finder on close
 - [x] 4.4 Build Contact with clickable email, phone and socials; verify browser tests check the `mailto:` and `tel:` links and that socials open in a new tab
 - [x] 4.5 Build Photos with All, Personal and Projects albums and a larger-size view; verify a browser test switches album and opens a photo
-- [ ] 4.6 Build the shared audio store and the Music app with play, pause and one-song-at-a-time; verify unit tests on the store and a browser test that playback continues after the Music window closes
+- [x] 4.6 Build the shared audio store and the Music app with play, pause and one-song-at-a-time; verify unit tests on the store and a browser test that playback continues after the Music window closes
 - [ ] 4.7 Build VS Code with a highlighted read-only snippet and file name; verify a browser test finds the file name and highlighted tokens
 
 ## 5. Widgets (`home-screen`)

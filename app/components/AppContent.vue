@@ -10,5 +10,6 @@ defineProps<{ window: AppWindow }>()
   <FinderApp v-else-if="window.app === 'finder'" :window="window" />
   <ContactApp v-else-if="window.app === 'contact'" />
   <PhotosApp v-else-if="window.app === 'photos'" :window="window" />
+  <MusicApp v-else-if="window.app === 'music'" />
   <div v-else class="p-md text-md">{{ APPS[window.app].title }}</div>
 </template>
