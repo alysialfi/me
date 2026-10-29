@@ -7,5 +7,6 @@ defineProps<{ window: AppWindow }>()
 
 <template>
   <NotesApp v-if="window.app === 'notes'" :window="window" />
+  <FinderApp v-else-if="window.app === 'finder'" :window="window" />
   <div v-else class="p-md text-md">{{ APPS[window.app].title }}</div>
 </template>
