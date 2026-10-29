@@ -1,3 +1,5 @@
 <template>
-  <main />
+  <ClientOnly>
+    <DesktopShell />
+  </ClientOnly>
 </template>
