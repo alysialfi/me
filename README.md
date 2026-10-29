@@ -23,28 +23,9 @@ npx playwright install chromium   # once
 npm run test:e2e     # browser tests (Playwright; starts the dev server on port 3100)
 ```
 
-## Build and host
+## Content and deployment
 
-```sh
-npx nuxt generate    # writes the static site to .output/public
-```
+- [Editing content](docs/editing-content.md): notes, projects, photos, songs, contact, snippet and history.
+- [Deploying](docs/deploy.md): build, server settings (nginx, Caddy, Apache) and checks.
 
-Copy `.output/public` to your web server's document root. Two server settings are required:
-
-- **Fallback to the home page:** any path the server has no file for must return `/200.html` (or `index.html`) with status 200, so direct links like `/finder/project-x` work.
-- **Range requests:** enabled for audio and video files (nginx and Caddy do this by default for static files).
-
-nginx example:
-
-```nginx
-location / { try_files $uri $uri/ /200.html; }
-```
-
-Caddy example:
-
-```
-try_files {path} {path}/ /200.html
-file_server
-```
-
-Preview the output locally with `npx serve .output/public`.
+Quick build: `npx nuxt generate` writes the static site to `.output/public`. Try it with `node scripts/serve-static.mjs`. To run the browser tests against that build: `E2E_STATIC=1 npm run test:e2e` (run `npx nuxt generate` first).
