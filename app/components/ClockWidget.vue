@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDate, formatTime, startClock } from '~/utils/clock'
+import { formatTime, startClock } from '~/utils/clock'
 
 const time = ref(new Date())
 let stop = () => {}
@@ -12,8 +12,7 @@ onUnmounted(() => stop())
 </script>
 
 <template>
-  <div class="flex h-full flex-col justify-center gap-1 p-sm" data-testid="clock-widget">
-    <span class="text-6xl font-light leading-none" data-testid="clock-time">{{ formatTime(time) }}</span>
-    <span class="text-md font-medium" data-testid="clock-date">{{ formatDate(time) }}</span>
+  <div class="flex h-full items-start" data-testid="clock-widget">
+    <span class="font-clock text-[48px] font-semibold leading-[1.2] md:text-[69px]" data-testid="clock-time">{{ formatTime(time) }}</span>
   </div>
 </template>
