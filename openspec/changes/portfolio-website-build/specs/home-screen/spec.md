@@ -32,6 +32,27 @@ On desktop the dock SHALL show an indicator under each app that has an open or m
 - **WHEN** a visitor activates the dock icon of an app that already has a window
 - **THEN** that window is brought to the front, restored if minimized, instead of opening a second one
 
+### Requirement: Menu bar date
+The desktop menu bar SHALL show the current date at its right end.
+
+#### Scenario: Menu bar date
+- **WHEN** the desktop home screen is visible
+- **THEN** the date (for example "Sun, Jun 9") appears after the battery icon and percentage, and the clock widget shows the time only
+
+### Requirement: Pressed app icon
+App icons SHALL give visible feedback while pressed.
+
+#### Scenario: Press an app icon
+- **WHEN** a visitor presses an app icon in the dock or on the home screen
+- **THEN** a dark overlay covers the icon until the press ends
+
+### Requirement: Calendar entry details
+A calendar widget entry SHALL expand on activation to show a description and a list of details, and collapse when activated again.
+
+#### Scenario: Expand and collapse
+- **WHEN** a visitor activates a calendar entry
+- **THEN** its description and bulleted details appear below the header and a chevron is shown, and activating it again hides them
+
 ## MODIFIED Requirements
 
 ### Requirement: Notes widget

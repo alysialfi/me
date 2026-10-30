@@ -12,6 +12,14 @@ On desktop the home screen SHALL show a macOS-style menu bar at the top, a wallp
 - **WHEN** a visitor opens the portfolio on a desktop-size screen
 - **THEN** the menu bar, wallpaper, widgets and dock are visible without scrolling
 
+#### Scenario: Menu bar date
+- **WHEN** the desktop menu bar is shown
+- **THEN** the current date (day, month, date, for example "Sun, Jun 9") appears at the right end of the menu bar, after the battery icon and percentage
+
+#### Scenario: Dock size
+- **WHEN** the desktop dock is reviewed
+- **THEN** its app icons are 44px rounded squares (corner radius 10) inside a dock with an 18px corner radius, 12px padding horizontally, 8px vertically and 12px between icons, and neither icons nor dock are circular or pill-shaped
+
 ### Requirement: App launcher
 The home screen SHALL expose the apps Photos, Contact, Notes, Finder, Music and VS Code as icons the visitor can open.
 
@@ -20,11 +28,15 @@ The home screen SHALL expose the apps Photos, Contact, Notes, Finder, Music and 
 - **THEN** that app opens (see portfolio-apps)
 
 ### Requirement: Clock widget
-The home screen SHALL include a clock widget showing the visitor's current time of day in hh:mm format.
+The home screen SHALL include a clock widget showing the visitor's current time of day in hh:mm format as plain text only, set in the Oxanium typeface at weight 600, with no card, background, glass effect, padding or date line.
 
 #### Scenario: Time display
 - **WHEN** the home screen is visible
 - **THEN** the clock widget shows the current time as hh:mm and updates as the time changes
+
+#### Scenario: Clock fills its columns
+- **WHEN** the desktop home screen is reviewed
+- **THEN** the clock text is scaled to span the full width of its 2 grid columns, aligned to the left column edge
 
 ### Requirement: Photo carousel widget
 The home screen SHALL include a photo carousel widget whose images are taken from the Photos app.
@@ -47,6 +59,18 @@ The home screen SHALL include a calendar widget in the style of an agenda list t
 #### Scenario: Entry row content
 - **WHEN** an entry is shown
 - **THEN** its row shows an accent bar, the title, and the period (for example "2022 – 2023") aligned to the right, with row and accent colors distinguishing entries
+
+#### Scenario: Expand an entry
+- **WHEN** a visitor activates an entry row
+- **THEN** the row expands in place into an expanded entry that keeps the header (accent bar, title, period) and adds a chevron, a description paragraph and a bulleted list of details about that experience, and activating it again collapses it
+
+#### Scenario: Expanded entry component
+- **WHEN** the design file is reviewed
+- **THEN** a reusable "Widget / Calendar Entry Expanded" component exists with the header, description and detail list, using the same colors as the collapsed row
+
+#### Scenario: Calendar padding
+- **WHEN** the calendar or notes widget is reviewed
+- **THEN** its content sits 24px inside the card on every side
 
 ### Requirement: Notes widget
 The home screen SHALL include a notes widget that shows a header with the Notes icon, the title and the number of notes, followed by a list of the owner's writings, each with its title and a date line.
@@ -85,8 +109,8 @@ Widgets and app icons SHALL share one visual language: rounded cards, a soft pas
 - **THEN** every widget uses the same corner radius, palette and spacing tokens
 
 ### Requirement: Typography
-All interface text, including the menu bar, widgets and app windows, SHALL use the Plus Jakarta Sans typeface. Code snippets MAY use a monospace typeface.
+All interface text, including the menu bar, widgets and app windows, SHALL use the Plus Jakarta Sans typeface, except the clock widget time, which uses Oxanium. Code snippets MAY use a monospace typeface.
 
 #### Scenario: Typeface across screens
 - **WHEN** any screen or app is reviewed
-- **THEN** its interface text is set in Plus Jakarta Sans, and only code snippets use a monospace font
+- **THEN** its interface text is set in Plus Jakarta Sans, only the clock time uses Oxanium, and only code snippets use a monospace font

@@ -66,6 +66,10 @@ The code snippet SHALL have a file name, a language and the source text.
 ### Requirement: History entries
 Each education or work entry SHALL have a title, a start year, an end year or "present", and a kind of education or work.
 
+#### Scenario: Entry details
+- **WHEN** an entry has a description or a list of details
+- **THEN** the calendar widget shows them when the entry is expanded, and both are optional
+
 #### Scenario: Open-ended entry
 - **WHEN** an entry has "present" as its end
 - **THEN** the calendar widget shows its period as running to the present

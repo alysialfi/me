@@ -13,6 +13,18 @@ At the lg breakpoint and above, apps SHALL open as windows above the home screen
 - **WHEN** a visitor opens another app while a window is open
 - **THEN** both windows are open and the new one is in front
 
+#### Scenario: Default size and position
+- **WHEN** an app opens as a window
+- **THEN** the window is 80% of the screen width and height and is centered on the screen, below the menu bar
+
+#### Scenario: Open and restore animation
+- **WHEN** a window opens or is restored from the dock
+- **THEN** it grows out of its dock icon with a genie effect, and a window already present when the page loads appears without animation
+
+#### Scenario: Show the desktop
+- **WHEN** a visitor clicks the bare desktop (wallpaper or the space between widgets)
+- **THEN** every open window is minimized and the dock icons keep their open indicators
+
 ### Requirement: Draggable and focusable windows
 At the lg breakpoint and above, a visitor SHALL be able to drag a window by its title bar and bring any window to the front by clicking it. A window SHALL stay at least partly within the screen.
 
@@ -39,6 +51,10 @@ At the lg breakpoint and above, each window SHALL show three round controls at t
 - **WHEN** a visitor activates the yellow control
 - **THEN** the window is hidden, its dock icon shows it is still open, and the next window in front becomes focused
 
+#### Scenario: Minimize animation
+- **WHEN** a window is minimized
+- **THEN** it shrinks into its dock icon with a genie effect that pulls the bottom edge into one bottom corner, the left corner when the dock icon is left of the window's center and the right corner otherwise, and closing a window does not animate
+
 #### Scenario: Restore a minimized window
 - **WHEN** a visitor activates the dock icon of a minimized app
 - **THEN** its window is shown again in front and becomes focused
@@ -56,7 +72,7 @@ At the lg breakpoint and above, each window SHALL show three round controls at t
 - **THEN** each shows its symbol (close, minimize, full screen)
 
 ### Requirement: Resizable windows
-At the lg breakpoint and above, a visitor SHALL be able to resize a window by dragging its edges or corners. A window SHALL be at least 320 by 240 pixels and at most the full screen.
+At the lg breakpoint and above, a visitor SHALL be able to resize a window by dragging its edges or corners. A window SHALL be at least 320 by 240 pixels and never wider than the screen or taller than the screen area below the menu bar.
 
 #### Scenario: Resize
 - **WHEN** a visitor drags a window corner outward
@@ -68,7 +84,7 @@ At the lg breakpoint and above, a visitor SHALL be able to resize a window by dr
 
 #### Scenario: Maximum size
 - **WHEN** a visitor drags an edge outward past the screen area
-- **THEN** the window stops at the full-screen size
+- **THEN** the window stops at the full-screen size, and it is never wider or taller than the screen
 
 ### Requirement: One app at a time on small screens
 Below the lg breakpoint, only the focused app SHALL be shown. Windows are neither draggable nor stacked.

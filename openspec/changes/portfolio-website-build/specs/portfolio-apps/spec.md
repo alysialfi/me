@@ -102,7 +102,7 @@ The Contact app SHALL display the owner's full name, email, phone number and soc
 
 #### Scenario: View contact card
 - **WHEN** a visitor opens Contact
-- **THEN** the owner's full name, email, phone number and socials are shown
+- **THEN** the owner's initials in a round avatar, full name, email, phone number and socials are shown, with the details grouped in one rounded card where each row has a small label above its value and rows are separated by dividers
 
 #### Scenario: Email
 - **WHEN** a visitor activates the email
