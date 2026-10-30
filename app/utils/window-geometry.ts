@@ -14,6 +14,14 @@ export function clampPosition(rect: Rect, screen: Screen): Rect {
   return { ...rect, x, y }
 }
 
+// A newly opened window takes 80% of the screen and sits in the middle, below the menu bar.
+export const DEFAULT_SCREEN_RATIO = 0.8
+export function defaultRect(screen: Screen): Rect {
+  const w = Math.round(screen.w * DEFAULT_SCREEN_RATIO)
+  const h = Math.round(screen.h * DEFAULT_SCREEN_RATIO)
+  return { x: Math.round((screen.w - w) / 2), y: Math.max(MENU_BAR_HEIGHT, Math.round((screen.h - h) / 2)), w, h }
+}
+
 export const MIN_WINDOW = { w: 320, h: 240 }
 export type Handle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
@@ -30,5 +38,8 @@ export function resizeRect(start: Rect, handle: Handle, dx: number, dy: number, 
   if (handle.includes('n')) top = Math.min(Math.max(top + dy, MENU_BAR_HEIGHT), bottom - MIN_WINDOW.h)
   if (handle.includes('s')) bottom = Math.max(Math.min(bottom + dy, screen.h), top + MIN_WINDOW.h)
 
-  return { x: left, y: top, w: right - left, h: bottom - top }
+  // A window never ends up larger than the screen area below the menu bar.
+  const w = Math.min(right - left, screen.w)
+  const h = Math.min(bottom - top, screen.h - MENU_BAR_HEIGHT)
+  return { x: handle.includes('w') ? right - w : left, y: handle.includes('n') ? bottom - h : top, w, h }
 }

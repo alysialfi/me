@@ -7,6 +7,12 @@ const widgetPlay = (page: Page) => page.locator('[data-widget="music"]').getByTe
 const appSong = (page: Page, id: string) => page.locator(`[data-window="music"] [data-song="${id}"]`)
 const audioPaused = (page: Page) => page.locator('[data-testid="shared-audio"]').evaluate((a: HTMLAudioElement) => a.paused)
 
+// Windows open at 80% of the screen and cover the widgets; a click on the bare desktop minimizes them.
+const showDesktop = async (page: Page) => {
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  await expect(page.locator('[data-window]')).toHaveCount(0)
+}
+
 test('the widget shows the first song while nothing plays', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('[data-widget="music"]').getByTestId('widget-title')).toHaveText('Placeholder Song 1')
@@ -16,12 +22,16 @@ test('the widget shows the first song while nothing plays', async ({ page }) => 
 
 test('play in the widget updates the Music app, and pause there updates the widget', async ({ page }) => {
   await page.goto('/music')
+  await showDesktop(page)
   await widgetPlay(page).click()
   await expect(widgetPlay(page)).toHaveAttribute('data-state', 'playing')
+  await page.locator('[data-testid="dock"] [data-app="music"]').click()
   await expect(appSong(page, '01-placeholder-song-1')).toHaveAttribute('data-state', 'playing')
 
+  await showDesktop(page)
   await widgetPlay(page).click()
   await expect(widgetPlay(page)).toHaveAttribute('data-state', 'paused')
+  await page.locator('[data-testid="dock"] [data-app="music"]').click()
   await expect(appSong(page, '01-placeholder-song-1')).toHaveAttribute('data-state', 'paused')
 })
 
@@ -44,6 +54,7 @@ test('the widget keeps showing the playing state after the Music window closes; 
 
 test('next switches songs; only one plays', async ({ page }) => {
   await page.goto('/')
+  await showDesktop(page)
   await page.locator('[data-widget="music"]').getByTestId('widget-next').click()
   await expect(page.locator('[data-widget="music"]').getByTestId('widget-title')).toHaveText('Placeholder Song 2')
   await expect(widgetPlay(page)).toHaveAttribute('data-state', 'playing')

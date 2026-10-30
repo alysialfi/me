@@ -30,17 +30,20 @@ test('dock click restores a minimized window in front, and never opens a second 
   await control(page, 'finder', 'minimize').click()
   await dock(page, 'finder').click()
   await expect(win(page, 'finder')).toHaveCount(1)
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
   expect(await page.evaluate(() => document.elementFromPoint(300, 300)?.closest('[data-window]')?.getAttribute('data-window'))).toBe('finder')
 
   await dock(page, 'finder').click()
   await dock(page, 'notes').click()
   await expect(win(page, 'finder')).toHaveCount(1)
   await expect(win(page, 'notes')).toHaveCount(1)
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
   expect(await page.evaluate(() => document.elementFromPoint(300, 300)?.closest('[data-window]')?.getAttribute('data-window'))).toBe('notes')
 })
 
 test('green control toggles full screen and restores the previous size', async ({ page }) => {
   await page.goto('/')
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
   const before = (await win(page, 'notes').boundingBox())!
   await control(page, 'notes', 'fullscreen').click()
   expect(await win(page, 'notes').boundingBox()).toMatchObject({ x: 0, y: 28, width: 1280, height: 792 })
@@ -56,4 +59,16 @@ test('hovering the controls shows each symbol', async ({ page }) => {
   await win(page, 'notes').getByTestId('window-controls').hover()
   for (const s of await symbols.all()) await expect(s).toHaveCSS('opacity', '1')
   await expect(symbols).toHaveCount(3)
+})
+
+test('minimize and restore animate with the genie effect toward the dock icon', async ({ page }) => {
+  await page.goto('/')
+  await dock(page, 'finder').click()
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
+  await control(page, 'finder', 'minimize').click()
+  await expect(win(page, 'finder')).toHaveAttribute('data-genie', 'out')
+  await expect(win(page, 'finder')).toHaveCount(0)
+  await dock(page, 'finder').click()
+  await expect(win(page, 'finder')).toHaveAttribute('data-genie', 'in')
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
 })

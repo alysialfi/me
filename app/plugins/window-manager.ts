@@ -4,7 +4,7 @@ import type { KnownContent } from '~/utils/routes'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { width, mode } = useViewport()
-  const wm = createWindowManager(mode)
+  const wm = createWindowManager(mode, () => import.meta.client ? { w: window.innerWidth, h: window.innerHeight } : { w: 1280, h: 820 })
   const notFound = useState('not-found', () => false)
   if (import.meta.client) {
     const update = () => { width.value = window.innerWidth }

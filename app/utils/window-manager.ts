@@ -1,5 +1,6 @@
 import { computed, reactive, ref, watch, type Ref } from 'vue'
 import type { ViewportMode } from './viewport'
+import { defaultRect, type Screen } from './window-geometry'
 
 export const APP_IDS = ['notes', 'finder', 'photos', 'contact', 'music', 'vscode'] as const
 export type AppId = typeof APP_IDS[number]
@@ -23,9 +24,7 @@ export interface AppWindow {
 
 export type WindowSnapshot = Pick<AppWindow, 'app' | 'view' | 'state' | 'minimizedFrom' | 'overlay'>
 
-export const DEFAULT_SIZE = { w: 640, h: 420 }
-
-export function createWindowManager(mode: Ref<ViewportMode>) {
+export function createWindowManager(mode: Ref<ViewportMode>, screen: () => Screen = () => ({ w: 1280, h: 820 })) {
   // Ordered back to front; the last non-minimized entry is the focused app.
   const windows = ref<AppWindow[]>([])
   // Below lg, closing an app returns to the home screen even if others stay listed open.
@@ -61,12 +60,11 @@ export function createWindowManager(mode: Ref<ViewportMode>) {
       if (w.state === 'minimized') w.state = w.minimizedFrom ?? 'normal'
       w.overlay = opts.overlay ?? false
     } else {
-      const n = windows.value.length
       w = reactive<AppWindow>({
         app,
         view: { ...view },
         state: 'normal',
-        rect: { x: 120 + n * 28, y: 80 + n * 28, ...DEFAULT_SIZE },
+        rect: defaultRect(screen()),
         overlay: opts.overlay ?? false
       })
       windows.value = [...windows.value, w]
@@ -94,6 +92,10 @@ export function createWindowManager(mode: Ref<ViewportMode>) {
     w.state = 'minimized'
   }
 
+  function minimizeAll() {
+    for (const w of windows.value) if (w.state !== 'minimized') minimize(w.app)
+  }
+
   function toggleFullscreen(app: AppId) {
     const w = find(app)
     if (!w || w.state === 'minimized') return
@@ -118,12 +120,12 @@ export function createWindowManager(mode: Ref<ViewportMode>) {
   // Replace the open windows, keeping the position and size of apps that stay open.
   function restore(entries: WindowSnapshot[]) {
     const old = new Map(windows.value.map(w => [w.app, w]))
-    windows.value = entries.map((e, n) => {
+    windows.value = entries.map((e) => {
       const prev = old.get(e.app)
       return reactive<AppWindow>({
         ...e,
         view: { ...e.view },
-        rect: prev ? { ...prev.rect } : { x: 120 + n * 28, y: 80 + n * 28, ...DEFAULT_SIZE },
+        rect: prev ? { ...prev.rect } : defaultRect(screen()),
         restoreRect: prev?.restoreRect ? { ...prev.restoreRect } : undefined
       })
     })
@@ -133,7 +135,7 @@ export function createWindowManager(mode: Ref<ViewportMode>) {
   // Dock indicator: an open or minimized window exists.
   const isOpen = (app: AppId) => !!find(app)
 
-  return { mode, windows, focused, visible, presentation, open, close, focus, minimize, toggleFullscreen, setRect, isOpen, snapshot, restore }
+  return { mode, windows, focused, visible, presentation, open, close, focus, minimize, minimizeAll, toggleFullscreen, setRect, isOpen, snapshot, restore }
 }
 
 export type WindowManager = ReturnType<typeof createWindowManager>

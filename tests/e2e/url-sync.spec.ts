@@ -15,7 +15,7 @@ test('the URL stays / until another app opens, then follows the focused app with
   await expect.poll(() => url(page)).toBe('/finder?with=notes')
   await dock(page, 'music').click()
   await expect.poll(() => url(page)).toBe('/music?with=notes,finder')
-  await win(page, 'notes').locator('[data-testid="title-bar"]').click({ position: { x: 60, y: 10 } })
+  await dock(page, 'notes').click()
   await expect.poll(() => url(page)).toBe('/notes?with=finder,music')
 })
 
@@ -64,6 +64,7 @@ test('a direct link opens that app and the with list, not the first-load Notes',
   await expect(win(page, 'music')).toBeVisible()
   await expect(win(page, 'notes')).toHaveCount(0)
   await expect(page.locator('[data-window]')).toHaveCount(2)
+  await expect(page.locator('[data-genie]')).toHaveCount(0)
   expect(await front(page)).toBe('finder')
   expect(url(page)).toBe('/finder/placeholder-alpha?with=music')
 })
