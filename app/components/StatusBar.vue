@@ -7,7 +7,7 @@
       </span>
       <span class="relative inline-block h-3 w-[27px]">
         <span class="absolute left-0 top-0 h-3 w-6 rounded-[4px] border border-ink/60" />
-        <span class="absolute left-1 top-1 h-2 w-4 rounded-sm bg-ink" />
+        <span class="absolute left-0.5 top-0.5 h-2 w-4 rounded-sm bg-ink" />
         <span class="absolute right-0 top-[3.5px] h-[5px] w-0.5 rounded-sm bg-ink/60" />
       </span>
     </div>
