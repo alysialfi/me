@@ -28,7 +28,7 @@ const widgets = [
     </div>
 
 
-    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-[28px] p-3 sm:bottom-6 sm:gap-[18px] sm:rounded-card sm:px-[19px] sm:py-[11px]">
+    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-[28px] p-3 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
       <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" :class="{ 'max-sm:hidden': id === 'music' || id === 'vscode' }" @click="wm.open(id)" />
     </nav>
 
