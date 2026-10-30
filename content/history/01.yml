@@ -2,3 +2,7 @@ title: Placeholder University
 start: 2015
 end: 2019
 kind: education
+description: Placeholder description of the studies.
+details:
+  - Placeholder detail one
+  - Placeholder detail two

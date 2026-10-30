@@ -2,3 +2,7 @@ title: Placeholder Company A
 start: 2019
 end: 2022
 kind: work
+description: Placeholder description of the role at Company A.
+details:
+  - Placeholder detail one
+  - Placeholder detail two

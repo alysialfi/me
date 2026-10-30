@@ -41,7 +41,9 @@ export function makeSchemas(z: any) {
       title: z.string().min(1),
       start: year,
       end: z.union([year, z.literal('present')]),
-      kind: z.enum(['education', 'work'])
+      kind: z.enum(['education', 'work']),
+      description: z.string().optional(),
+      details: z.array(z.string()).optional()
     })
   }
 }

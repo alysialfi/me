@@ -1,11 +1,11 @@
 export type HistoryKind = 'education' | 'work'
-export interface HistoryEntry { title: string, start: number, end: number | 'present', kind: HistoryKind }
+export interface HistoryEntry { title: string, start: number, end: number | 'present', kind: HistoryKind, description?: string, details?: string[] }
 export interface YearGroup { year: number, entries: HistoryEntry[] }
 
 // Content stores year fields as text and `present` JSON-quoted; read them back as numbers.
-export function normalizeEntry(row: { title: string, start: unknown, end: unknown, kind: HistoryKind }): HistoryEntry {
+export function normalizeEntry(row: { title: string, start: unknown, end: unknown, kind: HistoryKind, description?: string, details?: string[] }): HistoryEntry {
   const end = String(row.end).replace(/^"|"$/g, '')
-  return { title: row.title, start: Number(row.start), end: end === 'present' ? 'present' : Number(end), kind: row.kind }
+  return { title: row.title, start: Number(row.start), end: end === 'present' ? 'present' : Number(end), kind: row.kind, description: row.description, details: row.details }
 }
 
 export const periodText = (e: HistoryEntry) => `${e.start} – ${e.end === 'present' ? 'now' : e.end}`
