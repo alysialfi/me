@@ -101,6 +101,25 @@ On desktop the home screen SHALL use a 12-column grid, and each widget SHALL spa
 - **WHEN** the desktop home screen is reviewed at any desktop breakpoint
 - **THEN** each widget's width equals its column span on the 12-column grid and its edges sit on column boundaries
 
+### Requirement: Mobile home screen pager
+On mobile (base breakpoint) the home screen SHALL behave like iOS: widgets and app icons are split across full-width pages that sit side by side and are swiped horizontally like a carousel, with pagination dots above the dock showing the current page. The dock and status bar stay fixed while pages move. Page content SHALL end above the pagination dots, so its maximum height is the screen height minus the dock area, and widgets SHALL have a 16px gap between them and from the screen edges.
+
+#### Scenario: Swipe between pages
+- **WHEN** a visitor swipes horizontally on the mobile home screen
+- **THEN** the next or previous page slides in and the active pagination dot updates
+
+#### Scenario: Content fits above the dock
+- **WHEN** a mobile page is reviewed
+- **THEN** no widget or icon extends below the pagination dots or overlaps the dock, and no page scrolls vertically
+
+#### Scenario: Mobile dock and icon shape
+- **WHEN** the mobile dock and home icons are reviewed
+- **THEN** the 64px app icons use a 14px corner radius inside a dock with a 20px corner radius, so they read as rounded squares and not circles
+
+#### Scenario: Page layout
+- **WHEN** the mobile pages are reviewed in the design file
+- **THEN** page 1 shows the clock, photo carousel and calendar, and page 2 shows the notes widget, music widget and the Music and VS Code icons, each widget separated by a 16px gap
+
 ### Requirement: Consistent visual language
 Widgets and app icons SHALL share one visual language: rounded cards, a soft pastel teal and cream palette, and consistent spacing, following the reference home screen.
 
