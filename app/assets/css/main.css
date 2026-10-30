@@ -1,9 +1,11 @@
 @import "tailwindcss";
 @import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/oxanium";
 
 /* Design tokens taken from the Penpot file "mac ui" (token set "portfolio"
    plus values sampled from the Foundations/Home boards). */
 @theme {
+  --font-clock: "Oxanium Variable", ui-monospace, monospace;
   --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
 
   --color-wallpaper-teal: #809b98;
