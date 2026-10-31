@@ -8,7 +8,7 @@ test('the carousel shows a photo from Photos with one dot per photo and advances
   await page.clock.install()
   await page.goto('/')
   await expect(widget(page).getByTestId('carousel-photo')).toBeVisible()
-  await expect(widget(page).locator('[data-testid="carousel-dots"] button')).toHaveCount(4)
+  await expect(widget(page).locator('[data-testid="carousel-dots"] button')).toHaveCount(12)
   const first = await widget(page).getByTestId('carousel-photo').getAttribute('src')
   await page.clock.runFor(4100)
   await expect.poll(() => widget(page).getByTestId('carousel-photo').getAttribute('src')).not.toBe(first)
@@ -18,7 +18,7 @@ test('a dot selects a photo', async ({ page }) => {
   await page.goto('/')
   await page.locator('[data-window="notes"] [data-control="close"]').click()
   await widget(page).locator('[data-testid="carousel-dots"] button').nth(2).click()
-  await expect(widget(page).getByTestId('carousel-photo')).toHaveAttribute('src', '/media/photos/alpha.svg')
+  await expect(widget(page).getByTestId('carousel-photo')).toHaveAttribute('src', '/media/photos/cycling-kelok-23.jpg')
   await expect(page.locator('[data-window="photos"]')).toHaveCount(0)
 })
 
