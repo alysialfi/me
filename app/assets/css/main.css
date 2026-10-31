@@ -53,7 +53,7 @@
 }
 
 @utility bg-wallpaper {
-  background: radial-gradient(circle at 50% 50%, var(--color-wallpaper-teal), var(--color-wallpaper-mist));
+  background: url('/wallpaper/home.jpg') center / cover no-repeat, var(--color-wallpaper-mist);
 }
 
 @layer base {
