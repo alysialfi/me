@@ -1,4 +1,4 @@
-export type HistoryKind = 'education' | 'work'
+export type HistoryKind = 'education' | 'work' | 'award'
 export interface HistoryEntry { title: string, start: number, end: number | 'present', kind: HistoryKind, description?: string, details?: string[] }
 export interface YearGroup { year: number, entries: HistoryEntry[] }
 
@@ -8,7 +8,7 @@ export function normalizeEntry(row: { title: string, start: unknown, end: unknow
   return { title: row.title, start: Number(row.start), end: end === 'present' ? 'present' : Number(end), kind: row.kind, description: row.description, details: row.details }
 }
 
-export const periodText = (e: HistoryEntry) => `${e.start} – ${e.end === 'present' ? 'now' : e.end}`
+export const periodText = (e: HistoryEntry) => e.end === e.start ? `${e.start}` : `${e.start} – ${e.end === 'present' ? 'now' : e.end}`
 
 // Newest year first; inside a year, the latest start first.
 export function groupByYear(entries: HistoryEntry[]): YearGroup[] {

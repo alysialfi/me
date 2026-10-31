@@ -12,6 +12,7 @@ test('stored text values are read back as numbers and present', () => {
 test('periods show the years, and an open entry runs to now', () => {
   expect(periodText(e('A', 2019, 2022))).toBe('2019 – 2022')
   expect(periodText(e('B', 2024, 'present'))).toBe('2024 – now')
+  expect(periodText(e('C', 2023, 2023))).toBe('2023')
 })
 
 test('entries are grouped by year, newest year first', () => {
