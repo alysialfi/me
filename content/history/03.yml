@@ -1,8 +1,9 @@
-title: Placeholder Company B
-start: 2022
-end: 2024
+title: Work at Lunash
+start: 2024
+end: present
 kind: work
-description: Placeholder description of the role at Company B.
+description: Full Stack Developer (freelance), Jakarta, Indonesia (Remote).
 details:
-  - Placeholder detail one
-  - Placeholder detail two
+  - Developed 70% of the dashboard's core features for a fintech startup integrating in-house and third-party APIs
+  - Automated deployment pipelines, migrating infrastructure from Google Cloud to AWS
+  - Applied ReactTS and ExpressJS to build scalable components, improving system efficiency

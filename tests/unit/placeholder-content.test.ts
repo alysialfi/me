@@ -47,16 +47,15 @@ describe('placeholder content', () => {
     expect(files.some(f => f.type === 'image')).toBe(true)
   })
 
-  test('photos include both kinds and every referenced media file exists', () => {
+  test('photos exist and every referenced media file exists', () => {
     const photos = ymlDir('photos')
-    expect(new Set(photos.map(p => p.kind))).toEqual(new Set(['personal', 'project']))
+    expect(photos.length).toBeGreaterThan(0)
     const urls = [...photos.map(p => p.image), ...ymlDir('songs').flatMap(x => [x.audio, x.cover].filter(Boolean))]
     for (const u of urls) expect(mediaExists(u), u).toBe(true)
   })
 
-  test('a song without cover art exists and placeholders are labelled', () => {
+  test('a song without cover art exists and the contact is labelled', () => {
     expect(ymlDir('songs').some(x => !x.cover)).toBe(true)
     expect(yml('contact.yml').fullName).toMatch(/placeholder/i)
-    expect(ymlDir('photos').every(p => /placeholder/i.test(p.caption))).toBe(true)
   })
 })

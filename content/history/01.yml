@@ -1,8 +1,10 @@
-title: Placeholder University
-start: 2015
-end: 2019
-kind: education
-description: Placeholder description of the studies.
+title: Work at DomaiNesia
+start: 2021
+end: present
+kind: work
+description: Front-End Developer, Yogyakarta, Indonesia.
 details:
-  - Placeholder detail one
-  - Placeholder detail two
+  - Revamped and developed 90% of company landing pages, enhancing SEO performance
+  - Built dynamic pricing modules, in-page purchasing flows and reusable UI components
+  - Improved Core Web Vitals and reduced waiting time by optimizing code efficiency
+  - Collaborated with marketing teams to align campaigns with technical implementations
