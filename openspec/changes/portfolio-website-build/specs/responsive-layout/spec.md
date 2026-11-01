@@ -53,7 +53,7 @@ At the lg breakpoint and above, each window SHALL show three round controls at t
 
 #### Scenario: Minimize animation
 - **WHEN** a window is minimized
-- **THEN** it shrinks into its dock icon with a genie effect that pulls the bottom edge into one bottom corner, the left corner when the dock icon is left of the window's center and the right corner otherwise, and closing a window does not animate
+- **THEN** it shrinks into its dock icon with a macOS genie effect over half a second: first the top edge stays put while the bottom edge narrows onto the dock icon and the sides curve smoothly in, then the whole funnel slides down into the icon; restoring plays the same motion in reverse, and closing a window does not animate
 
 #### Scenario: Restore a minimized window
 - **WHEN** a visitor activates the dock icon of a minimized app
