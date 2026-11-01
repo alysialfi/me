@@ -30,8 +30,8 @@ test('a video in a note plays inside the note', async ({ page }) => {
 })
 
 test('a link to a project opens Finder in that project', async ({ page }) => {
-  await page.goto('/')
-  await body(page).getByRole('link', { name: 'Placeholder Alpha' }).click()
+  await page.goto('/notes/placeholder-media')
+  await body(page).getByRole('link', { name: 'link to a project' }).click()
   await expect(page.locator('[data-window="finder"]')).toBeVisible()
   await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/placeholder-alpha')
 })
