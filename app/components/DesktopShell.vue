@@ -1,28 +1,60 @@
 <script setup lang="ts">
 import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
+import { GENIE_MS, GENIE_STRIPS, genieStrips } from '~/utils/genie'
 const wm = useWindowManager()
 
-// Genie effect: the window shrinks toward its dock icon with the dock end pinched in.
-const GENIE_MS = 380
-const FULL = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
-// The bottom edge pulls into one bottom corner, the one on the dock icon's side of the window.
-const PINCHED = { left: 'polygon(0 0, 100% 0, 18% 100%, 0 100%)', right: 'polygon(0 0, 100% 0, 100% 100%, 82% 100%)' }
+// Genie effect (see utils/genie): the window is drawn as horizontal strips of static copies,
+// each squeezed onto its place in the funnel, while the real window stays hidden underneath.
+function stripCopy(win: HTMLElement, scrolled: [number, number, number][]) {
+  const copy = win.cloneNode(true) as HTMLElement
+  const all = copy.querySelectorAll<HTMLElement>('*')
+  for (const [i, top, left] of scrolled) Object.assign(all[i]!, { scrollTop: top, scrollLeft: left })
+  // Embeds would reload or replay inside every copy.
+  copy.querySelectorAll('iframe, video, audio, object, embed').forEach(e => e.replaceWith(document.createElement('div')))
+  for (const e of [copy, ...copy.querySelectorAll('[data-window], [data-testid], [id]')]) {
+    e.removeAttribute('data-window'); e.removeAttribute('data-testid'); e.removeAttribute('id')
+  }
+  copy.style.cssText += ';left:0;top:0;margin:0;visibility:visible;transform-origin:0 0;will-change:transform'
+  return copy
+}
 function genie(el: Element, direction: 'in' | 'out', done: () => void) {
   const win = el as HTMLElement
   const icon = document.querySelector<HTMLElement>(`[data-testid="dock"] [data-app="${win.dataset.window}"]`)
-  if (!icon || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return done()
+  if (!icon || !win.parentElement || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return done()
+  const box = win.getBoundingClientRect()
   const target = icon.getBoundingClientRect()
-  const ox = target.left + target.width / 2 - win.offsetLeft
-  const oy = target.top + target.height / 2 - win.offsetTop
-  const pinched = PINCHED[ox < win.offsetWidth / 2 ? 'left' : 'right']
-  win.style.transformOrigin = `${ox}px ${oy}px`
+  const scrolled: [number, number, number][] = []
+  win.querySelectorAll<HTMLElement>('*').forEach((e, i) => { if (e.scrollTop || e.scrollLeft) scrolled.push([i, e.scrollTop, e.scrollLeft]) })
+  const layer = document.createElement('div')
+  layer.setAttribute('aria-hidden', 'true')
+  layer.inert = true
+  layer.style.cssText = 'position:fixed;inset:0;z-index:999;pointer-events:none;overflow:hidden'
+  const band = box.height / GENIE_STRIPS
+  const copies = Array.from({ length: GENIE_STRIPS }, () => layer.appendChild(stripCopy(win, scrolled)))
+  win.parentElement.appendChild(layer)
+  win.style.visibility = 'hidden'
   win.dataset.genie = direction
-  const collapsed = { transform: 'scale(0.03)', clipPath: pinched, opacity: 0 }
-  const open = { transform: 'scale(1)', clipPath: FULL, opacity: 1 }
-  const mid = { transform: 'scale(0.55, 0.45)', clipPath: pinched, opacity: 1, offset: 0.6 }
-  const frames = direction === 'out' ? [open, mid, collapsed] : [collapsed, { ...mid, offset: 0.4 }, open]
-  const a = win.animate(frames, { duration: GENIE_MS, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' })
-  a.onfinish = a.oncancel = () => { win.style.transformOrigin = ''; delete win.dataset.genie; done() }
+  const start = performance.now()
+  const frame = (now: number) => {
+    const t = Math.min((now - start) / GENIE_MS, 1)
+    genieStrips(box, target, direction === 'out' ? t : 1 - t).forEach((s, i) => {
+      const sx = s.width / box.width
+      const sy = s.height / band
+      // Trim the copy to this strip's trapezoid, in its own (untransformed) pixels.
+      const lx = (x: number) => `${((x - s.x) / sx).toFixed(1)}px`
+      const y0 = `${i * band - 0.5}px`
+      const y1 = `${(i + 1) * band + 0.5}px`
+      const copy = copies[i]!
+      copy.style.clipPath = `polygon(${lx(s.top[0])} ${y0}, ${lx(s.top[1])} ${y0}, ${lx(s.bottom[1])} ${y1}, ${lx(s.bottom[0])} ${y1})`
+      copy.style.transform = `matrix(${sx}, 0, 0, ${sy}, ${s.x}, ${s.y - sy * i * band})`
+    })
+    if (t < 1) return requestAnimationFrame(frame)
+    layer.remove()
+    win.style.visibility = ''
+    delete win.dataset.genie
+    done()
+  }
+  frame(start)
 }
 // Windows restored on page load (first-load Notes, direct links) appear without animating.
 let mountedAt = Infinity
