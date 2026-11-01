@@ -6,29 +6,47 @@ import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
 const wm = useWindowManager()
 const sheets = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'sheet'))
 const overlays = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'overlay'))
-const widgets = [
-  { id: 'clock', cls: 'col-span-1 h-[140px]' },
-  { id: 'photo-carousel', cls: 'col-span-1 h-[140px]' },
-  { id: 'calendar', cls: 'col-span-2 sm:col-span-1 h-[300px]' },
-  { id: 'notes', cls: 'col-span-2 sm:col-span-1 h-[321px]' },
-  { id: 'music', cls: 'col-span-2 h-[170px]' }
+// Below sm the widgets form two swipeable pages (Penpot Home / base / Page 1 and Page 2); from sm up they share one grid.
+const pages = [
+  [
+    { id: 'clock', cls: 'h-[76px] sm:col-span-1 sm:h-[140px]' },
+    { id: 'photo-carousel', cls: 'h-[200px] sm:col-span-1 sm:h-[140px]' },
+    { id: 'calendar', cls: 'h-[314px] sm:col-span-1 sm:h-[300px]' }
+  ],
+  [
+    { id: 'notes', cls: 'h-[337px] sm:col-span-1 sm:h-[321px]' },
+    { id: 'music', cls: 'h-[170px] sm:col-span-2' }
+  ]
 ]
+const page = ref(0)
+const onScroll = (e: Event) => {
+  const el = e.currentTarget as HTMLElement
+  page.value = Math.round(el.scrollLeft / el.clientWidth)
+}
 </script>
 
 <template>
   <div data-testid="touch-home" class="bg-wallpaper fixed inset-0 overflow-y-auto overflow-x-hidden">
     <StatusBar />
-    <div data-testid="widget-grid" class="grid grid-cols-2 gap-3 px-4 pb-[120px] pt-[60px] sm:gap-4 sm:px-6 md:gap-6 md:px-8 md:pb-[140px]">
-      <div v-for="w in widgets" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
-        <HomeWidget :id="w.id as WidgetId" />
-      </div>
-      <div data-testid="app-grid" class="col-span-2 mt-3 flex gap-5 sm:hidden">
-        <AppIcon v-for="id in (['music', 'vscode'] as const)" :key="id" :app="id" size="sm" @click="wm.open(id)" />
+    <div
+      data-testid="widget-grid"
+      class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] max-sm:h-full sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-6 sm:pb-[140px] sm:pt-[60px] md:gap-6 md:px-8"
+      @scroll.passive="onScroll"
+    >
+      <div v-for="(group, i) in pages" :key="i" data-testid="home-page" class="flex w-full shrink-0 snap-center flex-col gap-4 px-4 pb-[130px] pt-[60px] max-sm:overflow-y-auto sm:contents">
+        <div v-for="w in group" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
+          <HomeWidget :id="w.id as WidgetId" />
+        </div>
+        <div v-if="i === 1" data-testid="app-grid" class="flex gap-5 sm:hidden">
+          <AppIcon v-for="id in (['music', 'vscode'] as const)" :key="id" :app="id" size="sm" @click="wm.open(id)" />
+        </div>
       </div>
     </div>
+    <div data-testid="page-dots" class="pointer-events-none fixed bottom-[116px] left-1/2 flex -translate-x-1/2 gap-2 sm:hidden" aria-hidden="true">
+      <i v-for="n in pages.length" :key="n" :class="[page === n - 1 ? 'bg-ink/90' : 'bg-ink/30', 'block size-2 rounded-full']" />
+    </div>
 
-
-    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-[28px] p-3 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
+    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-[20px] p-3 sm:bottom-6 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
       <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" :class="{ 'max-sm:hidden': id === 'music' || id === 'vscode' }" @click="wm.open(id)" />
     </nav>
 
