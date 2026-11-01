@@ -12,7 +12,7 @@ onUnmounted(() => stop())
 </script>
 
 <template>
-  <div class="flex h-full items-start" data-testid="clock-widget">
-    <span class="font-clock text-[48px] font-semibold leading-[1.2] md:text-[69px]" data-testid="clock-time">{{ formatTime(time) }}</span>
+  <div class="@container flex h-full items-start max-sm:justify-center" data-testid="clock-widget">
+    <span class="font-clock text-[48px] font-semibold leading-[1.2] lg:text-[37.7cqw]" data-testid="clock-time">{{ formatTime(time) }}</span>
   </div>
 </template>
