@@ -9,7 +9,8 @@ export function makeSchemas(z: any) {
     note: z.object({
       title: z.string().min(1),
       date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-      about: z.boolean().optional()
+      about: z.boolean().optional(),
+      summary: z.string().optional()
     }),
     project: z.object({
       name: z.string().min(1),
@@ -18,13 +19,16 @@ export function makeSchemas(z: any) {
     photo: z.object({
       image: z.string().min(1),
       caption: z.string().min(1),
-      kind: z.enum(['personal', 'project'])
+      kind: z.enum(['personal', 'project']),
+      year: year.optional()
     }),
     song: z.object({
       title: z.string().min(1),
       artist: z.string().min(1),
       cover: z.string().optional(),
-      audio: z.string().min(1)
+      audio: z.string().min(1),
+      genre: z.enum(['pop', 'lo-fi', 'jazz', 'rock']).optional(),
+      duration: z.number().positive().optional()
     }),
     contact: z.object({
       fullName: z.string().min(1),

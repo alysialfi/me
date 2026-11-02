@@ -1,6 +1,7 @@
 ---
 title: Placeholder note with media
 date: 2026-01-02
+summary: A note with a link, an image and a video…
 ---
 # Placeholder note with media
 
