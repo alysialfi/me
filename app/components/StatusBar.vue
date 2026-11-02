@@ -5,7 +5,7 @@
       <span class="flex items-end gap-0.5">
         <i v-for="h in [4, 6, 8, 10]" :key="h" class="block w-[3px] rounded-[1px] bg-ink" :style="{ height: `${h}px` }" />
       </span>
-      <span class="block h-3 w-6 rounded-[4px] bg-ink" />
+      <BatteryIndicator />
     </div>
   </header>
 </template>
