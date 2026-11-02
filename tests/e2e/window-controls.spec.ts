@@ -55,10 +55,11 @@ test('green control toggles full screen and restores the previous size', async (
 test('hovering the controls shows each symbol', async ({ page }) => {
   await page.goto('/')
   const symbols = win(page, 'notes').locator('[data-symbol]')
+  await expect(symbols).toHaveCount(3)
   for (const s of await symbols.all()) await expect(s).toHaveCSS('opacity', '0')
   await win(page, 'notes').getByTestId('window-controls').hover()
   for (const s of await symbols.all()) await expect(s).toHaveCSS('opacity', '1')
-  await expect(symbols).toHaveCount(3)
+  expect(await symbols.evaluateAll(els => els.map(e => e.getAttribute('data-symbol')))).toEqual(['close', 'minimize', 'fullscreen'])
 })
 
 test('minimize and restore animate with the genie effect toward the dock icon', async ({ page }) => {
@@ -71,4 +72,16 @@ test('minimize and restore animate with the genie effect toward the dock icon', 
   await dock(page, 'finder').click()
   await expect(win(page, 'finder')).toHaveAttribute('data-genie', 'in')
   await expect(page.locator('[data-genie]')).toHaveCount(0)
+})
+
+test('the menu bar battery follows the device battery and is hidden without the API', async ({ page }) => {
+  await page.addInitScript(() => {
+    const battery = Object.assign(new EventTarget(), { level: 0.42, charging: false })
+    ;(navigator as unknown as { getBattery: () => Promise<unknown> }).getBattery = () => Promise.resolve(battery)
+  })
+  await page.goto('/')
+  const bar = page.getByTestId('menu-bar')
+  await expect(bar.getByTestId('battery-percent')).toHaveText('42%')
+  const fill = (await bar.getByTestId('battery-level').boundingBox())!
+  expect(Math.round(fill.width)).toBe(Math.round(0.42 * 20))
 })

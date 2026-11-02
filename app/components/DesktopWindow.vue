@@ -48,14 +48,14 @@ const style = computed(() => fullscreen.value
   >
     <header class="flex h-10 shrink-0 cursor-default touch-none select-none items-center gap-xs bg-card px-sm" data-testid="title-bar" @pointerdown="startDrag">
       <div class="group flex items-center gap-xs" data-testid="window-controls">
-        <button type="button" aria-label="Close" data-control="close" class="flex size-3 items-center justify-center rounded-full bg-[#ff5f57] text-[9px] leading-none text-black/60" @click.stop="closeWindow">
-          <span class="opacity-0 group-hover:opacity-100" data-symbol="close">×</span>
+        <button type="button" aria-label="Close" data-control="close" class="flex size-3 items-center justify-center rounded-full bg-[#ff5f57]" @click.stop="closeWindow">
+          <svg viewBox="0 0 6 6" class="size-1.5 opacity-0 group-hover:opacity-100" data-symbol="close" aria-hidden="true"><path d="M0 0l6 6M6 0L0 6" fill="none" stroke="#4a0f0d" stroke-width="1.4" /></svg>
         </button>
-        <button type="button" aria-label="Minimize" data-control="minimize" class="flex size-3 items-center justify-center rounded-full bg-[#febc2e] text-[9px] leading-none text-black/60" @click.stop="wm.minimize(window.app)">
-          <span class="opacity-0 group-hover:opacity-100" data-symbol="minimize">−</span>
+        <button type="button" aria-label="Minimize" data-control="minimize" class="flex size-3 items-center justify-center rounded-full bg-[#febc2e]" @click.stop="wm.minimize(window.app)">
+          <svg viewBox="0 0 6 2" class="h-0.5 w-1.5 opacity-0 group-hover:opacity-100" data-symbol="minimize" aria-hidden="true"><path d="M0 1h6" fill="none" stroke="#6b4a00" stroke-width="1.4" /></svg>
         </button>
-        <button type="button" :aria-label="fullscreen ? 'Exit full screen' : 'Full screen'" data-control="fullscreen" class="flex size-3 items-center justify-center rounded-full bg-[#28c840] text-[8px] leading-none text-black/60" @click.stop="wm.toggleFullscreen(window.app)">
-          <span class="opacity-0 group-hover:opacity-100" data-symbol="fullscreen">{{ fullscreen ? '↙' : '↗' }}</span>
+        <button type="button" :aria-label="fullscreen ? 'Exit full screen' : 'Full screen'" data-control="fullscreen" class="flex size-3 items-center justify-center rounded-full bg-[#28c840]" @click.stop="wm.toggleFullscreen(window.app)">
+          <svg viewBox="0 0 6 6" class="size-1.5 opacity-0 group-hover:opacity-100" data-symbol="fullscreen" aria-hidden="true"><path :d="fullscreen ? 'M6 0v4L2 0zM0 6V2l4 4z' : 'M0 6V2l4 4zM6 0v4L2 0z'" fill="#0b4a14" /></svg>
         </button>
       </div>
       <span class="ml-1 text-base font-semibold">{{ APPS[window.app].title }}</span>
