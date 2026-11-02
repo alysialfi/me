@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { groupByYear, periodText } from '~/utils/history'
+import type { WidgetSize } from '~/utils/widget-layout'
+
+withDefaults(defineProps<{ size?: WidgetSize }>(), { size: 'M' })
 
 const { entries } = await useHistory()
 const groups = computed(() => groupByYear(entries.value))
@@ -37,7 +40,7 @@ const toggle = (title: string) => { expanded.value = expanded.value === title ? 
         <button type="button" class="flex min-h-[46px] w-full items-center gap-[10px] text-left" :aria-expanded="expanded === e.title" data-testid="calendar-toggle" @click="toggle(e.title)">
           <span class="h-[30px] w-[3px] shrink-0 rounded-sm" data-testid="calendar-bar" :style="{ backgroundColor: e.theme.bar }" />
           <span class="min-w-0 flex-1 truncate text-sm font-bold">{{ e.title }}</span>
-          <span class="shrink-0 text-xs font-medium" data-testid="calendar-period">{{ periodText(e) }}</span>
+          <span v-if="size !== 'S'" class="shrink-0 text-xs font-medium" data-testid="calendar-period">{{ periodText(e) }}</span>
           <svg v-if="expanded === e.title" viewBox="0 0 8 4" class="h-1 w-2 shrink-0" aria-hidden="true"><path d="M0 4l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
         </button>
         <div v-if="expanded === e.title" class="flex flex-col gap-2 pb-3 pl-[13px] text-xs text-[#3d5a73]" data-testid="calendar-details">

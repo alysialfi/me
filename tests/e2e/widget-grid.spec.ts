@@ -32,3 +32,58 @@ test('widgets sit on the design columns', async ({ page }) => {
   expect(await x('notes')).toBe(962)
   expect(await x('music')).toBe(859)
 })
+
+test('widgets are not resizable', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('[data-resize-widget]')).toHaveCount(0)
+})
+
+test('widget content follows its size', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  await expect(page.locator('[data-widget="notes"] [data-note]').first()).toContainText(/\d{4}/)
+  await expect(page.locator('[data-widget="music"]').getByTestId('up-next')).toHaveCount(0)
+})
+
+const dragBy = async (page: import('@playwright/test').Page, id: string, dx: number, dy: number, release = true) => {
+  const box = (await page.locator(`[data-widget="${id}"]`).boundingBox())!
+  const x = box.x + box.width / 2
+  const y = box.y + 30
+  await page.mouse.move(x, y)
+  await page.mouse.down()
+  await page.mouse.move(x + dx, y + dy, { steps: 10 })
+  if (release) await page.mouse.up()
+}
+
+test('a widget can be dragged onto free space and snaps to the columns; a reload puts it back', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  const before = (await page.locator('[data-widget="clock"]').boundingBox())!
+  await dragBy(page, 'clock', 3 * (COL + GUTTER) + 10, 0)
+  const after = (await page.locator('[data-widget="clock"]').boundingBox())!
+  expect(Math.round(after.x)).toBe(Math.round(before.x + 3 * (COL + GUTTER)))
+  expect(Math.round(after.y)).toBe(Math.round(before.y))
+  await page.reload()
+  await expect(page.locator('[data-widget="clock"]')).toBeVisible()
+  expect(Math.round((await page.locator('[data-widget="clock"]').boundingBox())!.x)).toBe(Math.round(before.x))
+})
+
+test('a widget dropped on another widget or off the free area goes back', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  const before = (await page.locator('[data-widget="clock"]').boundingBox())!
+  await dragBy(page, 'clock', 600, 0, false)
+  await expect(page.getByTestId('widget-ghost')).toHaveAttribute('data-free', 'false')
+  await page.mouse.up()
+  expect(await page.locator('[data-widget="clock"]').boundingBox()).toEqual(before)
+
+  await dragBy(page, 'clock', 0, 620)
+  expect(await page.locator('[data-widget="clock"]').boundingBox()).toEqual(before)
+})
+
+test('dragging does not activate the widget under the pointer', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  await dragBy(page, 'notes', -300, 400)
+  await expect(page.locator('[data-window]')).toHaveCount(0)
+})

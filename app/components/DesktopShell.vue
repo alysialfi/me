@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
+import { WIDGET_SPECS, defaultLayout, heightFor, heightOf, sizeFor, snapDrop, widthOf, type Layout, type Metrics, type Place } from '~/utils/widget-layout'
 import { GENIE_MS, GENIE_STRIPS, genieStrips } from '~/utils/genie'
 const wm = useWindowManager()
 
@@ -71,29 +72,119 @@ const onLeave = (el: Element, done: () => void) => {
   if (w?.state === 'minimized') genie(el, 'out', done)
   else done()
 }
-// 12-column grid, 24px gutters, widgets placed per the Penpot Home / xl board.
-const widgets = [
-  { id: 'clock', cls: 'col-span-2 col-start-1', top: 0, h: 120 },
-  { id: 'photo-carousel', cls: 'col-span-3 col-start-1', top: 144, h: 315 },
-  { id: 'calendar', cls: 'col-span-4 col-start-6', top: 0, h: 300 },
-  { id: 'notes', cls: 'col-span-3 col-start-10', top: 0, h: 321 },
-  { id: 'music', cls: 'col-span-4 col-start-9', top: 345, h: 170 }
-]
+// 12-column grid, 24px gutters, widgets placed per the Penpot Home / xl board. Widgets resize
+// between the columns of the "Widget Sizes" board and can be dragged onto free space only.
+// The arrangement is not kept: a reload returns every widget to its default place and size.
+const GUTTER = 24
+const WIDGET_AREA_TOP = 60
+// Room kept clear at the bottom of the screen for the dock.
+const DOCK_RESERVE = 100
+const grid = ref<HTMLElement>()
+const layout = ref<Layout>(defaultLayout())
+const metrics = reactive<Metrics>({ colWidth: (1280 - 64 - 11 * GUTTER) / 12, gutter: GUTTER, maxBottom: 820 - WIDGET_AREA_TOP - DOCK_RESERVE })
+const measure = () => {
+  if (grid.value) metrics.colWidth = (grid.value.clientWidth - 11 * GUTTER) / 12
+  metrics.maxBottom = window.innerHeight - WIDGET_AREA_TOP - DOCK_RESERVE
+}
+onMounted(() => {
+  measure()
+  window.addEventListener('resize', measure)
+})
+onUnmounted(() => window.removeEventListener('resize', measure))
+
+// While a widget is dragged it follows the pointer; a ghost shows the slot it would snap to.
+const drag = ref<{ id: WidgetId, dx: number, dy: number, target: Place, free: boolean } | null>(null)
+let justDragged = false
+const DRAG_THRESHOLD = 6
+
+function startDrag(id: WidgetId, e: PointerEvent) {
+  if (e.button !== 0) return
+  const widget = e.currentTarget as HTMLElement
+  const startX = e.clientX
+  const startY = e.clientY
+  const origin = widget.getBoundingClientRect()
+  const area = grid.value!.getBoundingClientRect()
+  let moving = false
+  const move = (ev: PointerEvent) => {
+    const dx = ev.clientX - startX
+    const dy = ev.clientY - startY
+    if (!moving && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
+    moving = true
+    const { place, free } = snapDrop(id, origin.left - area.left + dx, origin.top - area.top + dy, layout.value, metrics)
+    drag.value = { id, dx, dy, target: place, free }
+  }
+  const up = () => {
+    window.removeEventListener('pointermove', move)
+    window.removeEventListener('pointerup', up)
+    window.removeEventListener('pointercancel', up)
+    const d = drag.value
+    drag.value = null
+    if (!moving) return
+    // The click that ends a drag must not activate the widget under the pointer.
+    justDragged = true
+    setTimeout(() => { justDragged = false })
+    if (d?.free) {
+      layout.value.places[id] = d.target
+    }
+  }
+  window.addEventListener('pointermove', move)
+  window.addEventListener('pointerup', up)
+  window.addEventListener('pointercancel', up)
+}
+const swallowClick = (e: MouseEvent) => {
+  if (!justDragged) return
+  e.stopPropagation()
+  e.preventDefault()
+}
+
+const placed = computed(() => WIDGET_SPECS.map((spec) => {
+  const span = layout.value.spans[spec.id]
+  const place = layout.value.places[spec.id]
+  const size = sizeFor(spec.id, span)
+  const height = heightFor(spec.id, size, widthOf(span, metrics))
+  return {
+    spec,
+    size,
+    style: {
+      gridColumn: `${place.col} / span ${span}`,
+      marginTop: `${place.top}px`,
+      height: height === null ? undefined : `${height}px`
+    }
+  }
+}))
+const ghost = computed(() => {
+  const d = drag.value
+  if (!d) return null
+  const span = layout.value.spans[d.id]
+  const height = heightOf(d.id, sizeFor(d.id, span), widthOf(span, metrics))
+  return { free: d.free, style: { gridColumn: `${d.target.col} / span ${span}`, marginTop: `${d.target.top}px`, height: `${height}px` } }
+})
 </script>
 
 <template>
   <div data-testid="desktop" class="bg-wallpaper fixed inset-0 overflow-hidden" @click="onDesktopClick">
     <MenuBar />
-    <div data-testid="widget-grid" class="absolute inset-x-8 top-[60px] grid grid-cols-12 gap-x-6">
+    <div ref="grid" data-testid="widget-grid" class="absolute inset-x-8 top-[60px] grid grid-cols-12 gap-x-6">
       <div
-        v-for="w in widgets"
-        :key="w.id"
-        :data-widget="w.id"
-        :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'row-start-1 self-start overflow-hidden rounded-card']"
-        :style="{ marginTop: `${w.top}px`, height: `${w.h}px` }"
+        v-for="w in placed"
+        :key="w.spec.id"
+        :data-widget="w.spec.id"
+        :data-size="w.size"
+        :data-dragging="drag?.id === w.spec.id"
+        :class="[WIDGET_SURFACE[w.spec.id], drag?.id === w.spec.id ? 'z-20 cursor-grabbing opacity-90 shadow-2xl' : 'cursor-grab', 'group relative row-start-1 touch-none select-none self-start overflow-hidden rounded-card']"
+        :style="[w.style, drag?.id === w.spec.id ? { transform: `translate(${drag.dx}px, ${drag.dy}px)` } : {}]"
+        @pointerdown="startDrag(w.spec.id, $event)"
+        @click.capture="swallowClick"
       >
-        <HomeWidget :id="w.id as WidgetId" />
+        <HomeWidget :id="w.spec.id" :size="w.size" />
       </div>
+      <div
+        v-if="ghost"
+        data-testid="widget-ghost"
+        :data-free="ghost.free"
+        :class="[ghost.free ? 'border-ink/40 bg-ink/5' : 'border-[#e0483e] bg-[#e0483e]/10', 'pointer-events-none row-start-1 self-start rounded-card border-2 border-dashed']"
+        :style="ghost.style"
+      />
     </div>
     <TransitionGroup :css="false" @enter="onEnter" @leave="onLeave">
       <DesktopWindow v-for="(win, i) in wm.visible.value" :key="win.app" :window="win" :z="10 + i" />
