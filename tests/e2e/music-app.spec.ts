@@ -8,10 +8,29 @@ const paused = (page: Page) => audio(page).evaluate((a: HTMLAudioElement) => a.p
 const src = (page: Page) => audio(page).evaluate((a: HTMLAudioElement) => new URL(a.src, location.href).pathname)
 const song = (page: Page, id: string) => page.locator(`[data-window="music"] [data-song="${id}"]`)
 
-test('songs are listed; a song without cover art shows the default cover', async ({ page }) => {
+test('songs are listed with genre and duration; the header shows the loaded song', async ({ page }) => {
   await page.goto('/music')
   await expect(page.locator('[data-window="music"] [data-song]')).toHaveCount(2)
-  await expect(page.getByTestId('default-cover')).toHaveCount(1)
+  await expect(page.getByTestId('featured-title')).toHaveText('Placeholder Song 1')
+  await expect(song(page, '01-placeholder-song-1').getByTestId('genre-tag')).toHaveText('Pop')
+  await expect(song(page, '01-placeholder-song-1')).toContainText('3:42')
+})
+
+test('the genre filter narrows the list; All shows everything again', async ({ page }) => {
+  await page.goto('/music')
+  await page.locator('[data-window="music"] [data-genre="lo-fi"]').click()
+  await expect(page.locator('[data-window="music"] [data-song]')).toHaveCount(1)
+  await expect(song(page, '02-placeholder-song-2')).toBeVisible()
+  await page.locator('[data-window="music"] [data-genre="all"]').click()
+  await expect(page.locator('[data-window="music"] [data-song]')).toHaveCount(2)
+})
+
+test('the header play button plays and pauses the loaded song', async ({ page }) => {
+  await page.goto('/music')
+  await page.getByTestId('music-play').click()
+  await expect(song(page, '01-placeholder-song-1')).toHaveAttribute('data-state', 'playing')
+  await page.getByTestId('music-play').click()
+  await expect(song(page, '01-placeholder-song-1')).toHaveAttribute('data-state', 'paused')
 })
 
 test('nothing plays until the visitor presses play; play then pause', async ({ page }) => {
