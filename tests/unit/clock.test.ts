@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { formatDate, formatTime, startClock } from '../../app/utils/clock'
+import { formatDate, formatStatusTime, formatTime, startClock } from '../../app/utils/clock'
 
 beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
@@ -30,4 +30,9 @@ test('rolling past midnight changes the date', () => {
   expect(formatTime(time.value)).toBe('00:00')
   expect(formatDate(time.value)).toBe('Mon, Jun 10')
   stop()
+})
+
+test('the status bar time follows the locale and drops AM/PM', () => {
+  expect(formatStatusTime(new Date(2024, 5, 9, 17, 5), 'en-US')).toBe('5:05')
+  expect(formatStatusTime(new Date(2024, 5, 9, 17, 5), 'en-GB')).toBe('17:05')
 })

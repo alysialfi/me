@@ -9,3 +9,11 @@ export function startClock(interval = 1000, now: () => Date = () => new Date()):
   const id = setInterval(() => { time.value = now() }, interval)
   return { time, stop: () => clearInterval(id) }
 }
+
+// The phone status bar time: the visitor's own locale and hour cycle, without AM/PM (like iOS).
+export const formatStatusTime = (d: Date, locale?: string) =>
+  new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' }).formatToParts(d)
+    .filter(p => p.type !== 'dayPeriod')
+    .map(p => p.value)
+    .join('')
+    .trim()
