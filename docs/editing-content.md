@@ -55,7 +55,7 @@ One folder per project, containing a `project.yml` and the project's files:
 ```
 content/projects/my-project/
   project.yml
-  case-study.pdf
+  case-study.md
   screenshot-1.png
 ```
 
@@ -65,7 +65,32 @@ name: My Project          # shown under the folder, and used to sort folders
 summary: One line about it   # optional
 ```
 
-Files can be **PDF or images** (`png`, `jpg`, `jpeg`, `gif`, `webp`, `avif`, `svg`). Any other file type fails the build with a message naming the file. Folders are sorted by `name`.
+Files can be **Markdown or images** (`png`, `jpg`, `jpeg`, `gif`, `webp`, `avif`, `svg`). Any other file type fails the build with a message naming the file. Folders are sorted by `name`.
+
+A Markdown file opens in Finder as a case study. Its frontmatter fills the side column and its body fills the main column:
+
+```md
+---
+title: My Project
+url: https://example.com/        # optional
+period: 2024-present             # optional
+role: Front-End Developer        # optional
+stack: [Vue.js, TailwindCSS]     # optional
+links:                           # optional, shown under "Repository"
+  - label: my-repo
+    url: https://github.com/you/my-repo
+---
+## Description
+
+Text, **formatting**, bullet lists and links.
+
+## Screenshots
+
+![Homepage](/projects/my-project/01-homepage.jpg)
+![Pricing](/projects/my-project/02-pricing.jpg)
+```
+
+Images in the folder are reachable at `/projects/<folder>/<file>`. Consecutive images form a grid.
 
 ## Photos
 

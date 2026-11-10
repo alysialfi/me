@@ -14,7 +14,11 @@ All portfolio content SHALL be stored as files in the repository and be editable
 - **THEN** the change appears in every app and widget that presents that content
 
 ### Requirement: Notes content
-Each note SHALL have a title, a date and a body that may contain text, links, images and video. One note, "About me", SHALL be designated as the first note shown.
+Each note SHALL have a title, a date and a body that may contain text, links, images and video, and MAY have a one-line summary. One note, "About me", SHALL be designated as the first note shown.
+
+#### Scenario: Note summary
+- **WHEN** a note has a summary
+- **THEN** the notes widget at its largest size shows it as a preview line under the note title
 
 #### Scenario: Rich note body
 - **WHEN** a note body contains text, a link, an image and a video
@@ -25,25 +29,37 @@ Each note SHALL have a title, a date and a body that may contain text, links, im
 - **THEN** the site build fails with a message naming the missing designation
 
 ### Requirement: Project folders
-Each project SHALL be a folder with a name and zero or more files. A file SHALL be a PDF or an image.
+Each project SHALL be a folder with a name and zero or more files. A file SHALL be a Markdown case study or an image.
 
 #### Scenario: Project with mixed files
-- **WHEN** a project folder contains one PDF and two images
+- **WHEN** a project folder contains one Markdown case study and two images
 - **THEN** Finder lists all three files inside that project's folder
 
 #### Scenario: Unsupported file type
-- **WHEN** a project folder contains a file that is neither a PDF nor an image
+- **WHEN** a project folder contains a file that is neither a Markdown case study nor an image, such as a PDF
 - **THEN** the site build fails with a message naming the file
 
+#### Scenario: Case study frontmatter
+- **WHEN** a project has a Markdown case study
+- **THEN** its frontmatter requires a title and may give a site URL, a period, a role, a list of stacks and a list of links each with a label and URL
+
 ### Requirement: Photo items
-Each photo SHALL be an image with a caption and a kind of either personal or project.
+Each photo SHALL be an image with a caption and a kind of either personal or project, and MAY have the year it was taken.
+
+#### Scenario: Photo year
+- **WHEN** a photo has a year
+- **THEN** Photos shows it in that year's section, and a photo without a year is shown under "Other"
 
 #### Scenario: Photo kinds
 - **WHEN** photos of both kinds exist
-- **THEN** Photos can present them as separate albums and the photo carousel widget can use any of them
+- **THEN** Photos shows them together and the photo carousel widget can use any of them
 
 ### Requirement: Song items
-Each song SHALL have a title, an artist, optional cover art and a playable audio source.
+Each song SHALL have a title, an artist, optional cover art and a playable audio source, and MAY have a genre (pop, lo-fi, jazz or rock) and a duration in seconds.
+
+#### Scenario: Song genre
+- **WHEN** a song has a genre
+- **THEN** Music shows its colored genre tag and lists it under that genre's filter chip, and a genre with no songs has no chip
 
 #### Scenario: Song without cover art
 - **WHEN** a song has no cover art
@@ -64,7 +80,7 @@ The code snippet SHALL have a file name, a language and the source text.
 - **THEN** VS Code highlights the source for that language
 
 ### Requirement: History entries
-Each education or work entry SHALL have a title, a start year, an end year or "present", and a kind of education or work.
+Each history entry SHALL have a title, a start year, an end year or "present", and a kind of education, work or award.
 
 #### Scenario: Entry details
 - **WHEN** an entry has a description or a list of details

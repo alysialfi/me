@@ -7,6 +7,7 @@ export default defineContentConfig({
   collections: {
     notes: defineCollection({ type: 'page', source: 'notes/*.md', schema: s.note }),
     projects: defineCollection({ type: 'data', source: 'projects/*/project.yml', schema: s.project }),
+    projectDocs: defineCollection({ type: 'page', source: 'projects/*/*.md', schema: s.projectDoc }),
     photos: defineCollection({ type: 'data', source: 'photos/*.yml', schema: s.photo }),
     songs: defineCollection({ type: 'data', source: 'songs/*.yml', schema: s.song }),
     contact: defineCollection({ type: 'data', source: 'contact.yml', schema: s.contact }),

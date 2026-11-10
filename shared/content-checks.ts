@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { extname, join } from 'node:path'
 import { PROJECT_FILE_EXTENSIONS } from './content-schemas'
 
-export interface ProjectFile { name: string, type: 'pdf' | 'image' }
+export interface ProjectFile { name: string, type: 'image' | 'doc' }
 
 export function checkAboutMe(notesDir: string) {
   const files = existsSync(notesDir) ? readdirSync(notesDir).filter(f => f.endsWith('.md')) : []
@@ -24,9 +24,9 @@ export function checkProjectFiles(projectsDir: string): Record<string, ProjectFi
       if (name === 'project.yml') continue
       const ext = extname(name).slice(1).toLowerCase()
       if (!PROJECT_FILE_EXTENSIONS.includes(ext)) {
-        throw new Error(`Unsupported project file "${join(slug, name)}": project files must be a PDF or an image (${PROJECT_FILE_EXTENSIONS.join(', ')}).`)
+        throw new Error(`Unsupported project file "${join(slug, name)}": project files must be a Markdown case study or an image (${PROJECT_FILE_EXTENSIONS.join(', ')}).`)
       }
-      result[slug].push({ name, type: ext === 'pdf' ? 'pdf' : 'image' })
+      result[slug].push({ name, type: ext === 'md' ? 'doc' : 'image' })
     }
   }
   return result

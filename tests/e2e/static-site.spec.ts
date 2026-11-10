@@ -20,8 +20,8 @@ test('direct loads of nested paths work with no console errors', async ({ page }
     ['/', '[data-window="notes"]'],
     ['/notes/about-me', '[data-window="notes"] [data-testid="note-body"]'],
     ['/notes/placeholder-media', '[data-window="notes"] video'],
-    ['/finder/placeholder-alpha', '[data-file="case-study.pdf"]'],
-    ['/finder/placeholder-alpha/screenshot-1.svg', '[data-testid="image-viewer"] img'], // not pre-rendered: falls back
+    ['/finder/domainesia-landing-page', '[data-file="case-study.md"]'],
+    ['/finder/domainesia-landing-page/01-homepage.jpg', '[data-testid="image-viewer"] img'], // not pre-rendered: falls back
     ['/photos/projects', '[data-photo]'],
     ['/contact', '[data-contact="email"]'],
     ['/music', '[data-song]'],
@@ -49,8 +49,8 @@ test('navigation, back and forward work on the static site', async ({ page }) =>
   await page.goto('/')
   await page.locator('[data-testid="dock"] [data-app="finder"]').click()
   await expect.poll(() => new URL(page.url()).pathname).toBe('/finder')
-  await page.locator('[data-window="finder"] [data-project="placeholder-alpha"]').dblclick()
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/placeholder-alpha')
+  await page.locator('[data-window="finder"] [data-project="domainesia-landing-page"]').dblclick()
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/domainesia-landing-page')
   await page.goBack()
   await expect.poll(() => new URL(page.url()).pathname).toBe('/finder')
   await page.goForward()
@@ -81,12 +81,16 @@ test('video in a note plays from the static site', async ({ page }) => {
   expect(problems).toEqual([])
 })
 
-test('a PDF from Finder renders every page from the static site', async ({ page }) => {
+test('a project image from Finder loads from the static site', async ({ page }) => {
   const problems = watchConsole(page)
-  await page.goto('/finder/placeholder-alpha')
-  await page.locator('[data-file="case-study.pdf"]').dblclick()
-  await expect(page.locator('canvas[data-page]')).toHaveCount(2)
-  const res = await page.request.get('/projects/placeholder-alpha/case-study.pdf')
-  expect(res.headers()['content-type']).toBe('application/pdf')
+  await page.goto('/finder/mentor-and-speaker')
+  await page.locator('[data-file="04a-rakamin-mentor-certificate.jpg"]').dblclick()
+  const img = page.getByTestId('image-viewer').locator('img')
+  await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true)
   expect(problems).toEqual([])
+})
+
+test('the home page does not prefetch pdf.js', async ({ page }) => {
+  await page.goto('/')
+  expect(await page.locator('link[href*="pdf"]').count()).toBe(0)
 })

@@ -24,13 +24,20 @@ test('an about note passes', () => {
   expect(() => checkAboutMe(notes)).not.toThrow()
 })
 
-test('project with a PDF and two images lists all three', () => {
+test('project with a case study and two images lists all three', () => {
   const projects = tmp()
   mkdirSync(join(projects, 'x'))
-  for (const f of ['project.yml', 'doc.pdf', 'a.png', 'b.JPG']) writeFileSync(join(projects, 'x', f), '')
+  for (const f of ['project.yml', 'case-study.md', 'a.png', 'b.JPG']) writeFileSync(join(projects, 'x', f), '')
   expect(checkProjectFiles(projects).x).toEqual([
-    { name: 'a.png', type: 'image' }, { name: 'b.JPG', type: 'image' }, { name: 'doc.pdf', type: 'pdf' }
+    { name: 'a.png', type: 'image' }, { name: 'b.JPG', type: 'image' }, { name: 'case-study.md', type: 'doc' }
   ])
+})
+
+test('build fails on a PDF project file', () => {
+  const projects = tmp()
+  mkdirSync(join(projects, 'x'))
+  writeFileSync(join(projects, 'x', 'doc.pdf'), '')
+  expect(() => checkProjectFiles(projects)).toThrow(/Unsupported project file "x\/doc\.pdf"/)
 })
 
 test('build fails naming an unsupported project file', () => {
@@ -44,10 +51,10 @@ test('known content lists notes, projects and files, and prerender routes skip f
   const root = tmp()
   mkdirSync(join(root, 'notes')); mkdirSync(join(root, 'projects/x'), { recursive: true })
   writeFileSync(join(root, 'notes/about-me.md'), '')
-  writeFileSync(join(root, 'projects/x/doc.pdf'), '')
+  writeFileSync(join(root, 'projects/x/shot.png'), '')
   const known = knownContent(root)
-  expect(known).toEqual({ notes: ['about-me'], projects: { x: ['doc.pdf'] } })
+  expect(known).toEqual({ notes: ['about-me'], projects: { x: ['shot.png'] } })
   const routes = prerenderRoutes(known)
   expect(routes).toEqual(expect.arrayContaining(['/', '/finder', '/notes/about-me', '/finder/x', '/photos/personal']))
-  expect(routes.some(r => r.endsWith('.pdf'))).toBe(false)
+  expect(routes.some(r => r.endsWith('.png'))).toBe(false)
 })

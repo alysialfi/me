@@ -28,17 +28,17 @@ const closeViewer = () => wm.open('finder', { project: props.window.view.project
   <div class="flex h-full flex-col" data-testid="finder-app">
     <template v-if="project && file">
       <header class="flex min-h-11 shrink-0 items-center gap-xs border-b border-ink/10 px-sm">
-        <button type="button" data-testid="viewer-close" class="min-h-11 pr-xs text-md font-semibold" @click="closeViewer">‹ Close</button>
+        <button type="button" data-testid="viewer-close" aria-label="Close file" class="flex size-11 items-center justify-start" @click="closeViewer"><BackChevron /></button>
         <span class="truncate text-md font-bold" data-testid="viewer-name">{{ file.name }}</span>
       </header>
       <div class="min-h-0 flex-1">
-        <PdfViewer v-if="file.type === 'pdf'" :src="fileUrl" class="h-full" />
+        <CaseStudyViewer v-if="file.type === 'doc'" :slug="project.slug" :name="file.name" />
         <ImageViewer v-else :src="fileUrl" :name="file.name" />
       </div>
     </template>
     <template v-else>
     <header class="flex min-h-11 shrink-0 items-center gap-xs border-b border-ink/10 px-sm">
-      <button v-if="project" type="button" data-testid="finder-back" class="min-h-11 pr-xs text-md font-semibold" @click="back">‹ Back</button>
+      <button v-if="project" type="button" data-testid="finder-back" aria-label="Back" class="flex size-11 items-center justify-start" @click="back"><BackChevron /></button>
       <span class="text-md font-bold" data-testid="finder-path">{{ project ? project.name : 'Projects' }}</span>
     </header>
 
@@ -66,7 +66,15 @@ const closeViewer = () => wm.open('finder', { project: props.window.view.project
           @click="activate(() => openFile(f.name), f.name, $event)"
           @dblclick="activate(() => openFile(f.name), f.name, $event)"
         >
-          <FileIcon :kind="f.type" />
+          <img
+            v-if="f.type === 'image'"
+            :src="`/projects/${project.slug}/${f.name}`"
+            :alt="f.name"
+            loading="lazy"
+            data-testid="file-thumb"
+            class="h-12 w-16 rounded-xs border border-ink/15 bg-card object-cover"
+          >
+          <FileIcon v-else :kind="f.type" />
           <span class="break-all text-center text-base font-medium">{{ f.name }}</span>
         </button>
       </li>

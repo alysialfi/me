@@ -2,13 +2,6 @@
 
 ## ADDED Requirements
 
-### Requirement: PDF viewer
-The PDF viewer SHALL display a project PDF with its file name and let the visitor scroll through its pages and close it.
-
-#### Scenario: View a PDF
-- **WHEN** a PDF is opened from Finder
-- **THEN** the PDF viewer shows its pages and file name, and closing it returns to Finder
-
 ### Requirement: Image viewer
 The image viewer SHALL display a project image at a larger size with its file name and let the visitor close it.
 
@@ -87,22 +80,26 @@ Opening, focusing or closing an app SHALL update the URL and add a history entry
 ## MODIFIED Requirements
 
 ### Requirement: Photos app
-The Photos app SHALL display the owner's personal photos and project screenshots, grouped into a Personal album and a Projects album, plus an All view.
+The Photos app SHALL display the owner's personal photos and project screenshots together, grouped by year.
 
 #### Scenario: Browse photos
 - **WHEN** a visitor opens Photos
-- **THEN** the photos are shown and a visitor can view one at larger size
+- **THEN** the photos are shown and a visitor can view one at larger size by double-clicking it, or by tapping it on a touch screen
 
-#### Scenario: Switch album
-- **WHEN** a visitor selects the Projects album
-- **THEN** only project screenshots are shown
+#### Scenario: Photos grouped by year
+- **WHEN** Photos shows the images
+- **THEN** they are grouped by year, newest first, as vertically stacked sections each with a year heading above its photo grid, and photos without a year come last under "Other"
+
+#### Scenario: Step through photos with the keyboard
+- **WHEN** a photo is open at larger size in the focused Photos window and the visitor presses the right or left arrow key
+- **THEN** the next or previous photo in grid order is shown, and nothing changes at the first or last photo
 
 ### Requirement: Contact app
 The Contact app SHALL display the owner's full name, email, phone number and socials, and each of them SHALL be clickable.
 
 #### Scenario: View contact card
 - **WHEN** a visitor opens Contact
-- **THEN** the owner's initials in a round avatar, full name, email, phone number and socials are shown, with the details grouped in one rounded card where each row has a small label above its value and rows are separated by dividers
+- **THEN** the owner's initials in a round avatar, full name, email, phone number and socials are shown, with the details grouped in one rounded card where the email and phone rows have a small label above their value and rows are separated by dividers
 
 #### Scenario: Email
 - **WHEN** a visitor activates the email
@@ -115,6 +112,10 @@ The Contact app SHALL display the owner's full name, email, phone number and soc
 #### Scenario: Social
 - **WHEN** a visitor activates a social
 - **THEN** its profile opens in a new tab and the portfolio stays open
+
+#### Scenario: Social links
+- **WHEN** the contact details include socials
+- **THEN** each social is listed with its label and an icon (the brand mark for GitHub, LinkedIn and Medium, a plain link icon for any other site) and opens in a new tab
 
 ### Requirement: Notes app
 The Notes app SHALL list the owner's notes, show the selected note with its text, links, images and video, and open on the "About me" note by default.
@@ -131,8 +132,12 @@ The Notes app SHALL list the owner's notes, show the selected note with its text
 - **WHEN** a note contains a video and a visitor plays it
 - **THEN** the video plays inside the note
 
+#### Scenario: Image gallery in a note
+- **WHEN** a note has two or more images next to each other in one paragraph
+- **THEN** they are shown as a grid of four square tiles per row
+
 ### Requirement: Finder app
-The Finder app SHALL show one folder icon per project, sorted by project name, and opening a folder SHALL list its files. Opening a PDF file SHALL use the PDF viewer and opening an image file SHALL use the image viewer.
+The Finder app SHALL show one folder icon per project, sorted by project name, and opening a folder SHALL list its files. Opening a Markdown file SHALL use the case-study viewer and opening an image file SHALL use the image viewer.
 
 #### Scenario: Project folders
 - **WHEN** a visitor opens Finder
@@ -142,13 +147,21 @@ The Finder app SHALL show one folder icon per project, sorted by project name, a
 - **WHEN** a visitor double-clicks a project folder
 - **THEN** the files inside that project are listed
 
-#### Scenario: Open a PDF project
-- **WHEN** a visitor double-clicks a PDF file in a project folder
-- **THEN** it opens in the PDF viewer
+#### Scenario: Open a Markdown case study
+- **WHEN** a visitor selects a project file that is Markdown
+- **THEN** it opens in the case-study viewer, with its frontmatter in a side column (title, site link, period, Role/Position, Stacks and Repository links, each shown only when given) and its text in a main column; the side column sits above the text when the viewer is narrow
 
 #### Scenario: Open an image project
 - **WHEN** a visitor double-clicks an image file in a project folder
 - **THEN** it opens in the image viewer
+
+#### Scenario: Image thumbnails
+- **WHEN** a project folder is open
+- **THEN** each image file shows a thumbnail of its own picture, and other files show a file icon
+
+#### Scenario: Finder back and close
+- **WHEN** a project folder or a file is open in Finder
+- **THEN** a back arrow in a 44px touch target at the left of the Finder header returns to the project list or to the folder, with no text beside it
 
 #### Scenario: Touch screens
 - **WHEN** a visitor on a touch screen taps a folder or file
@@ -176,3 +189,7 @@ The Music app SHALL show the owner's favorite songs and let the visitor play and
 #### Scenario: One song at a time
 - **WHEN** a visitor selects a different song while one is playing
 - **THEN** the first stops and only the new one plays
+
+#### Scenario: Songs differentiated by genre
+- **WHEN** the Music app lists songs
+- **THEN** each song shows a color-coded genre tag (for example Pop, Lo-fi, Jazz, Rock), and a genre filter row of matching colored chips (with an All chip) sits between the now-playing block and the song list

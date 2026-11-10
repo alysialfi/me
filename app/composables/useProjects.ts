@@ -1,4 +1,4 @@
-export interface ProjectFile { name: string, type: 'pdf' | 'image' }
+export interface ProjectFile { name: string, type: 'image' | 'doc' }
 export interface ProjectItem { slug: string, name: string, summary?: string, files: ProjectFile[] }
 
 // One folder per project, sorted by name. Files come from the build-time folder scan.

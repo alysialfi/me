@@ -1,7 +1,7 @@
 // Content schemas, written against a passed-in `z` so the same definitions run
 // inside Nuxt Content (its bundled zod) and in unit tests (the zod package).
 export const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg']
-export const PROJECT_FILE_EXTENSIONS = ['pdf', ...IMAGE_EXTENSIONS]
+export const PROJECT_FILE_EXTENSIONS = ['md', ...IMAGE_EXTENSIONS]
 
 export function makeSchemas(z: any) {
   const year = z.number().int().min(1900).max(2200)
@@ -15,6 +15,14 @@ export function makeSchemas(z: any) {
     project: z.object({
       name: z.string().min(1),
       summary: z.string().optional()
+    }),
+    projectDoc: z.object({
+      title: z.string().min(1),
+      url: z.string().url().optional(),
+      period: z.string().optional(),
+      role: z.string().optional(),
+      stack: z.array(z.string()).optional(),
+      links: z.array(z.object({ label: z.string().min(1), url: z.string().url() })).optional()
     }),
     photo: z.object({
       image: z.string().min(1),
