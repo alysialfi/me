@@ -16,6 +16,10 @@ On desktop the home screen SHALL show a macOS-style menu bar at the top, a wallp
 - **WHEN** the desktop menu bar is shown
 - **THEN** the current date (day, month, date, for example "Sun, Jun 9") appears at the right end of the menu bar, after the battery icon and percentage
 
+#### Scenario: Battery level
+- **WHEN** the browser reports the device battery
+- **THEN** the battery icon fills to the battery level and the percentage is shown beside it, the fill turns red at 20% or below while not charging, and both are hidden when the browser does not report a battery
+
 #### Scenario: Dock size
 - **WHEN** the desktop dock is reviewed
 - **THEN** its app icons are 44px rounded squares (corner radius 10) inside a dock with an 18px corner radius, 12px padding horizontally, 8px vertically and 12px between icons, and neither icons nor dock are circular or pill-shaped
@@ -101,8 +105,57 @@ On desktop the home screen SHALL use a 12-column grid, and each widget SHALL spa
 - **WHEN** the desktop home screen is reviewed at any desktop breakpoint
 - **THEN** each widget's width equals its column span on the 12-column grid and its edges sit on column boundaries
 
+### Requirement: Resizable widgets
+Widgets SHALL be resizable on the desktop grid between a minimum and a maximum column span, and each widget SHALL show a layout suited to its current size: clock 2 to 4 columns, photo carousel 2 to 6, notes 2 to 4, calendar 3 to 6, and music 3 to 6.
+
+#### Scenario: Size limits
+- **WHEN** a visitor resizes a widget
+- **THEN** its width snaps to whole column spans and cannot go below its minimum or above its maximum
+
+#### Scenario: Small layouts
+- **WHEN** a widget is at its minimum size
+- **THEN** it shows a reduced layout: clock text scaled down, photo carousel without pagination dots, notes without title or dates, calendar without periods and only the latest years, music without the progress bar
+
+#### Scenario: Large layouts
+- **WHEN** a widget is at its maximum size
+- **THEN** it shows extra content: clock text scaled up, photo carousel with a year and photo count chip, notes with a preview line per note, calendar with an expanded entry detail, and music with an up-next queue showing genre tags
+
+### Requirement: Movable widgets
+Widgets SHALL be movable on the desktop grid by dragging, onto free space only, and the arrangement SHALL NOT be kept between visits.
+
+#### Scenario: Drag onto free space
+- **WHEN** a visitor drags a widget
+- **THEN** it follows the pointer, a dashed ghost shows the slot it would snap to (red when another widget is in the way), and on release it snaps to whole columns in that slot if the slot is free, or returns to where it was if not
+
+#### Scenario: Drag does not open
+- **WHEN** a drag ends over a widget
+- **THEN** the click that ends the drag does not activate that widget
+
+#### Scenario: Reset on reload
+- **WHEN** a visitor reloads the page after moving or resizing widgets
+- **THEN** every widget is back at its default place and size
+
+### Requirement: Mobile status bar
+Below the lg breakpoint the home screen SHALL show an iOS-style status bar with the visitor's time, network signal and battery, all taken from the visitor's own device.
+
+#### Scenario: Status bar time
+- **WHEN** the status bar is shown
+- **THEN** it shows the visitor's current time in their locale and hour cycle without AM/PM (for example "5:34"), filled in after the page loads
+
+#### Scenario: Network signal
+- **WHEN** the browser reports the connection through the Network Information API
+- **THEN** a Wi-Fi connection shows a Wi-Fi symbol and any other connection shows four signal bars, with lit arcs or bars following the connection quality (one for 2G, two for 3G, three or four for faster links), none lit while offline, and unlit ones dimmed
+
+#### Scenario: Network not reported
+- **WHEN** the browser does not support the Network Information API
+- **THEN** no signal indicator is shown
+
+#### Scenario: Status bar battery
+- **WHEN** the browser reports the device battery
+- **THEN** the status bar shows the battery icon filled to the battery level, without the percentage
+
 ### Requirement: Mobile home screen pager
-On mobile (base breakpoint) the home screen SHALL behave like iOS: widgets and app icons are split across full-width pages that sit side by side and are swiped horizontally like a carousel, with pagination dots above the dock showing the current page. The dock and status bar stay fixed while pages move. Page content SHALL end above the pagination dots, so its maximum height is the screen height minus the dock area, and widgets SHALL have a 16px gap between them and from the screen edges.
+On mobile (base breakpoint) the home screen SHALL behave like iOS: widgets are split across full-width pages that sit side by side and are swiped horizontally like a carousel, with pagination dots above the dock showing the current page. All six apps SHALL be in the dock. The dock and status bar stay fixed while pages move.
 
 #### Scenario: Swipe between pages
 - **WHEN** a visitor swipes horizontally on the mobile home screen
@@ -110,15 +163,15 @@ On mobile (base breakpoint) the home screen SHALL behave like iOS: widgets and a
 
 #### Scenario: Content fits above the dock
 - **WHEN** a mobile page is reviewed
-- **THEN** no widget or icon extends below the pagination dots or overlaps the dock, and no page scrolls vertically
+- **THEN** page content ends above the pagination dots, so no widget extends below them or overlaps the dock, and no page scrolls vertically
 
 #### Scenario: Mobile dock and icon shape
-- **WHEN** the mobile dock and home icons are reviewed
-- **THEN** the 64px app icons use a 14px corner radius inside a dock with a 20px corner radius, so they read as rounded squares and not circles
+- **WHEN** the mobile dock is reviewed
+- **THEN** it holds all six apps as 44px icons with a 12px corner radius inside a dock with a 20px corner radius, so they read as rounded squares and not circles, with 8px padding and 8px between icons on screens narrower than 380px and 12px from 380px
 
 #### Scenario: Page layout
-- **WHEN** the mobile pages are reviewed in the design file
-- **THEN** page 1 shows the clock, photo carousel and calendar, and page 2 shows the notes widget, music widget and the Music and VS Code icons, each widget separated by a 16px gap
+- **WHEN** the mobile pages are reviewed
+- **THEN** page 1 shows the clock, photo carousel and calendar, and page 2 shows the notes widget and music widget, with no app icons on either page and a 16px gap between widgets and from the screen edges
 
 ### Requirement: Consistent visual language
 Widgets and app icons SHALL share one visual language: rounded cards, a soft pastel teal and cream palette, and consistent spacing, following the reference home screen.

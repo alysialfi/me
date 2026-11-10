@@ -15,7 +15,7 @@ const pages = [
   ],
   [
     { id: 'notes', cls: 'h-[337px] sm:col-span-1 sm:h-[321px]' },
-    { id: 'music', cls: 'h-[170px] sm:col-span-2' }
+    { id: 'music', cls: 'h-[200px] sm:h-[170px] sm:col-span-2' }
   ]
 ]
 const page = ref(0)
@@ -37,17 +37,14 @@ const onScroll = (e: Event) => {
         <div v-for="w in group" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
           <HomeWidget :id="w.id as WidgetId" />
         </div>
-        <div v-if="i === 1" data-testid="app-grid" class="flex gap-5 sm:hidden">
-          <AppIcon v-for="id in (['music', 'vscode'] as const)" :key="id" :app="id" size="sm" @click="wm.open(id)" />
-        </div>
       </div>
     </div>
     <div data-testid="page-dots" class="pointer-events-none fixed bottom-[116px] left-1/2 flex -translate-x-1/2 gap-2 sm:hidden" aria-hidden="true">
       <i v-for="n in pages.length" :key="n" :class="[page === n - 1 ? 'bg-ink/90' : 'bg-ink/30', 'block size-2 rounded-full']" />
     </div>
 
-    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-[20px] p-3 sm:bottom-6 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
-      <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" :class="{ 'max-sm:hidden': id === 'music' || id === 'vscode' }" @click="wm.open(id)" />
+    <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-[20px] p-2 min-[380px]:gap-3 min-[380px]:p-3 sm:bottom-6 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
+      <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" @click="wm.open(id)" />
     </nav>
 
     <AppOverlay v-for="w in overlays" :key="w.app" :window="w" />

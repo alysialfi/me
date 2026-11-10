@@ -2,12 +2,12 @@
 import { APPS } from '~/utils/apps'
 import type { AppId } from '~/utils/window-manager'
 
-// lg = 44px (desktop and iPadOS dock); sm = 64px (iOS); adaptive = 64px, 44px from the sm breakpoint.
+// lg = 44px (desktop and iPadOS dock); sm = 64px; adaptive = 44px, so six fit across a phone dock.
 withDefaults(defineProps<{ app: AppId, running?: boolean, size?: 'lg' | 'sm' | 'adaptive' }>(), { running: false, size: 'lg' })
 const SIZES = {
   lg: 'size-11 rounded-[10px]',
   sm: 'size-16 rounded-[20px]',
-  adaptive: 'size-16 rounded-[20px] sm:size-11 sm:rounded-[10px]'
+  adaptive: 'size-11 rounded-[12px] sm:rounded-[10px]'
 }
 </script>
 
