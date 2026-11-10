@@ -29,3 +29,24 @@ test('a photo opens at a larger size and closes again', async ({ page }) => {
   await large.getByTestId('photo-close').click()
   await expect(large).toHaveCount(0)
 })
+
+test('arrow keys step through the open photo in grid order and stop at the ends', async ({ page }) => {
+  await page.goto('/photos')
+  await expect(page.locator('[data-window="photos"] [data-year]')).toHaveCount(3)
+  const captions = await photos(page).evaluateAll(els => els.map(e => e.getAttribute('aria-label')))
+  const caption = page.getByTestId('photo-large').getByTestId('photo-caption')
+  await photos(page).first().dblclick()
+  await expect(caption).toHaveText(captions[0]!)
+  await page.keyboard.press('ArrowLeft') // already the first
+  await expect(caption).toHaveText(captions[0]!)
+  await page.keyboard.press('ArrowRight')
+  await expect(caption).toHaveText(captions[1]!)
+  await page.keyboard.press('ArrowLeft')
+  await expect(caption).toHaveText(captions[0]!)
+
+  await page.getByTestId('photo-close').click()
+  await photos(page).last().dblclick()
+  await expect(caption).toHaveText(captions.at(-1)!)
+  await page.keyboard.press('ArrowRight') // already the last
+  await expect(caption).toHaveText(captions.at(-1)!)
+})

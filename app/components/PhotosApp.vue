@@ -17,6 +17,20 @@ const wm = useWindowManager()
 const touch = computed(() => wm.mode.value !== 'desktop')
 const open = ref<string | null>(null)
 const current = computed(() => photos.value.find(p => p.id === open.value))
+
+// Left and right arrows step through the photos in the order the grid shows them, stopping at
+// either end, while a photo is open and Photos is the focused window.
+const order = computed(() => years.value.flatMap(y => y.photos))
+const onKey = (e: KeyboardEvent) => {
+  if (!open.value || wm.focused.value?.app !== 'photos') return
+  const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+  if (!step) return
+  e.preventDefault()
+  const next = order.value[order.value.findIndex(p => p.id === open.value) + step]
+  if (next) open.value = next.id
+}
+onMounted(() => window.addEventListener('keydown', onKey))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>
 
 <template>
