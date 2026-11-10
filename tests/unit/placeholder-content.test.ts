@@ -41,9 +41,9 @@ describe('placeholder content', () => {
     expect(notes.some(n => /\[[^\]]+\]\([^)]+\)/.test(n.body) && /!\[[^\]]*\]\(/.test(n.body) && /::note-video\{src=/.test(n.body) && /^[A-Za-z]/m.test(n.body))).toBe(true)
   })
 
-  test('projects include a PDF and images', () => {
+  test('projects include a case study and images', () => {
     const files = Object.values(checkProjectFiles(join(content, 'projects'))).flat()
-    expect(files.some(f => f.type === 'pdf')).toBe(true)
+    expect(files.some(f => f.type === 'doc')).toBe(true)
     expect(files.some(f => f.type === 'image')).toBe(true)
   })
 
@@ -54,8 +54,7 @@ describe('placeholder content', () => {
     for (const u of urls) expect(mediaExists(u), u).toBe(true)
   })
 
-  test('a song without cover art exists and the contact is labelled', () => {
+  test('a song without cover art exists', () => {
     expect(ymlDir('songs').some(x => !x.cover)).toBe(true)
-    expect(yml('contact.yml').fullName).toMatch(/placeholder/i)
   })
 })

@@ -13,14 +13,14 @@ for (const [name, width, height] of [['desktop', 1280, 820], ['phone', 390, 844]
     })
 
     test('unknown note, project, file and album names are not found', async ({ page }) => {
-      for (const path of ['/notes/missing', '/finder/missing', '/finder/placeholder-alpha/missing.pdf', '/photos/nope', '/contact/extra']) {
+      for (const path of ['/notes/missing', '/finder/missing', '/finder/domainesia-landing-page/missing.pdf', '/photos/nope', '/contact/extra']) {
         await page.goto(path)
         await expect(page.getByTestId('not-found'), path).toBeVisible()
       }
     })
 
     test('known paths show no notice', async ({ page }) => {
-      for (const path of ['/notes/about-me', '/finder/placeholder-alpha', '/finder/placeholder-alpha/case-study.pdf', '/photos/personal', '/contact']) {
+      for (const path of ['/notes/about-me', '/finder/domainesia-landing-page', '/finder/domainesia-landing-page/case-study.md', '/photos/personal', '/contact']) {
         await page.goto(path)
         await expect(page.locator('[data-window]')).toHaveCount(1)
         await expect(page.getByTestId('not-found'), path).toHaveCount(0)

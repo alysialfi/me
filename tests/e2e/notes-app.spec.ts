@@ -33,7 +33,7 @@ test('a link to a project opens Finder in that project', async ({ page }) => {
   await page.goto('/notes/placeholder-media')
   await body(page).getByRole('link', { name: 'link to a project' }).click()
   await expect(page.locator('[data-window="finder"]')).toBeVisible()
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/placeholder-alpha')
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/domainesia-landing-page')
 })
 
 test('a link to an app opens that app', async ({ page }) => {

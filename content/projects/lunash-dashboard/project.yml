@@ -1,0 +1,2 @@
+name: Lunash Dashboard & Deployment
+summary: Fintech debt-recovery dashboard built on in-house and third-party APIs, with automated deployment and a move from GCP to AWS. React, TypeScript, Express.
