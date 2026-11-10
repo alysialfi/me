@@ -1,8 +1,10 @@
-fullName: Placeholder Name
-email: placeholder@example.com
-phone: "+00 000 000 0000"
+fullName: Alysia Alfi
+email: 9c.alysialfi@gmail.com
+phone: "+62 831 0618 4338"
 socials:
-  - label: GitHub (placeholder)
-    url: https://github.com/
-  - label: LinkedIn (placeholder)
-    url: https://www.linkedin.com/
+  - label: GitHub
+    url: https://github.com/alysialfi
+  - label: LinkedIn
+    url: https://linkedin.com/in/alysialfi
+  - label: Medium
+    url: https://alysialfi.medium.com

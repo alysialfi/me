@@ -20,13 +20,13 @@ const row = 'flex min-h-11 flex-col gap-0.5 p-[14px] [&+&]:border-t [&+&]:border
       <a
         v-for="s in contact.socials"
         :key="s.url"
-        :class="row"
+        :class="[row, '!flex-row items-center gap-3']"
         :href="s.url"
         target="_blank"
         rel="noopener noreferrer"
         data-contact="social"
       >
-        <span class="text-xs font-medium text-[#8a9291]">social</span><span class="text-lg font-medium">{{ s.label }}</span>
+        <SocialIcon :url="s.url" /><span class="text-lg font-medium">{{ s.label }}</span>
       </a>
     </div>
   </div>
