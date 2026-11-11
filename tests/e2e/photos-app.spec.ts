@@ -7,8 +7,8 @@ const photos = (page: import('@playwright/test').Page) => page.locator('[data-wi
 test('photos are grouped under year headings, newest first', async ({ page }) => {
   await page.goto('/photos')
   const years = page.locator('[data-window="photos"] [data-year]')
-  await expect(years).toHaveCount(3)
-  expect(await years.evaluateAll(els => els.map(e => e.getAttribute('data-year')))).toEqual(['2024', '2023', '2022'])
+  await expect(years).toHaveCount(4)
+  expect(await years.evaluateAll(els => els.map(e => e.getAttribute('data-year')))).toEqual(['2026', '2024', '2023', '2022'])
   await expect(years.first().locator('[data-photo]')).not.toHaveCount(0)
   const box = (await photos(page).first().boundingBox())!
   expect(Math.round(box.width)).toBe(130)
@@ -32,7 +32,7 @@ test('a photo opens at a larger size and closes again', async ({ page }) => {
 
 test('arrow keys step through the open photo in grid order and stop at the ends', async ({ page }) => {
   await page.goto('/photos')
-  await expect(page.locator('[data-window="photos"] [data-year]')).toHaveCount(3)
+  await expect(page.locator('[data-window="photos"] [data-year]')).toHaveCount(4)
   const captions = await photos(page).evaluateAll(els => els.map(e => e.getAttribute('aria-label')))
   const caption = page.getByTestId('photo-large').getByTestId('photo-caption')
   await photos(page).first().dblclick()
