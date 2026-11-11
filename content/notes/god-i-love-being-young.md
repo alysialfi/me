@@ -1,6 +1,6 @@
 ---
 title: God, I love being young 🥹
-date: 2026-11-02
+date: 2026-10-28
 summary: Energy, curiosity and free will, spent on being outside, far from home and grateful for it.
 ---
 
@@ -22,7 +22,20 @@ Working while doing my undergraduate degree sounds scary, but I slayed it: I fin
 
 Some photos of me doing things I love.
 
-![Audax 150](/media/photos/audax-150.jpg)
-![Cycling Kelok 23](/media/photos/cycling-kelok-23.jpg)
-![Our first hiking](/media/photos/our-first-hiking.jpg)
-![Me at Prambanan](/media/photos/me-at-prambanan.jpg)
+![Audax 150: a 150 km endurance ride.](/media/photos/audax-150.jpg)
+*Audax 150: a 150 km endurance ride.*
+
+![Cycling the Kelok 23 climb.](/media/photos/cycling-kelok-23.jpg)
+*Cycling the Kelok 23 climb.*
+
+![Our first hiking trip together.](/media/photos/our-first-hiking.jpg)
+*Our first hiking trip together.*
+
+![My first half marathon.](/media/photos/my-first-half-marathon.jpg)
+*Slayed 21k half marathon.*
+
+![Finishing a trail run, muddy and happy.](/media/photos/finishing-trail-run.jpg)
+*Finishing a trail run, muddy and happy.*
+
+![Majestic Mount Bromo.](/media/photos/majestic-bromo.jpg)
+*Bromo is always majestic.*

@@ -12,7 +12,7 @@ Hello 👋 I'm **Alfi** (she/her), a software developer helping business deals w
 I work mostly on frontend with Vue.js, PHP, and TailwindCSS, alwith several experiences in full-stack apps with React, TypeScript and Express. I communicate a lot with stakeholders and care about what users think about services i made to create good services while maintaining the business matters.
 
 - DomaiNesia (2021 – now): Responsible for the company's landing pages, including in-page purchasing flows and dynamic pricing. Recently, maintain user dashboard for better user experiences. When the stack migrate from jQuery to Vue.js, I helped map and clean up the old code. Also working closely with marketing and bisdev team to integrate system such WHMCS and Slack.
-- TMLA (2025): Help the founder creating landing page that is fast and well-informed enough for targeted users.
+- TMLA (2025)st: Help the founder creating landing page that is fast and well-informed enough for targeted users.
 - Lunash (2024 – 2025, freelance): Built about 70% of the core features of a fintech dashboard that connects in-house and third-party APIs. I also automated deployment and helped migrate the infrastructure from Google Cloud to AWS.
 
 ## **Mentoring, speaking, and community**

@@ -26,4 +26,4 @@ Working inside a platform you don't own rewards restraint. Small, well-placed ho
 
 ## Screenshots
 
-![Overview](/projects/domainesia-user-dashboard/01-overview.png)
+![Overview](/projects/domainesia-user-dashboard/01-overview.webp)

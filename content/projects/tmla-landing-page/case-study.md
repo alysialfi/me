@@ -26,5 +26,5 @@ A landing page is the first proof of a company's values, so the design has to pr
 
 ## Screenshots
 
-![Hero](/projects/tmla-landing-page/01-hero.png)
-![Why TMLA](/projects/tmla-landing-page/02-why-tmla.png)
+![Hero](/projects/tmla-landing-page/01-hero.webp)
+![Why TMLA](/projects/tmla-landing-page/02-why-tmla.webp)

@@ -1,6 +1,6 @@
 ---
 title: Five years in tech
-date: 2026-11-05
+date: 2026-11-06
 summary: The visible part of my work is small. Most of the time goes to finding out what is underneath it.
 ---
 

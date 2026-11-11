@@ -1,6 +1,6 @@
 ---
 title: How I ship more with AI
-date: 2026-11-05
+date: 2026-10-21
 summary: I use AI as a partner when I'm learning and as an agent when I already know what I want. I try to know which one I'm doing.
 ---
 
