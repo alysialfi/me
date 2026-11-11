@@ -47,6 +47,9 @@ const formatDate = (d: string) => new Date(`${d}T00:00:00`).toLocaleDateString('
 <style>
 .note-prose h1 { font-size: var(--text-4xl); font-weight: 700; }
 .note-prose img { max-width: 100%; border-radius: var(--radius-window); }
+.note-prose p:has(> img + em) { text-align: center; }
+.note-prose p:has(> img + em) img { display: block; width: 100%; max-width: 16rem; margin: 0 auto; }
+.note-prose p:has(> img + em) em { display: block; margin-top: 0.5rem; font-size: 0.84375rem; line-height: 1.4; }
 .note-prose p:has(> img + img) { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-sm, 0.5rem); }
 .note-prose p:has(> img + img) img { width: 100%; aspect-ratio: 1; object-fit: cover; }
 </style>
