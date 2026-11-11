@@ -21,13 +21,27 @@ const current = computed(() => photos.value.find(p => p.id === open.value))
 // Left and right arrows step through the photos in the order the grid shows them, stopping at
 // either end, while a photo is open and Photos is the focused window.
 const order = computed(() => years.value.flatMap(y => y.photos))
+const go = (step: number) => {
+  const next = order.value[order.value.findIndex(p => p.id === open.value) + step]
+  if (next) open.value = next.id
+}
 const onKey = (e: KeyboardEvent) => {
   if (!open.value || wm.focused.value?.app !== 'photos') return
   const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
   if (!step) return
   e.preventDefault()
-  const next = order.value[order.value.findIndex(p => p.id === open.value) + step]
-  if (next) open.value = next.id
+  go(step)
+}
+
+// A horizontal swipe on the open photo steps to the next (swipe left) or previous (swipe right) one.
+let swipe: { x: number, y: number } | null = null
+const swipeStart = (e: TouchEvent) => { const t = e.touches[0]!; swipe = { x: t.clientX, y: t.clientY } }
+const swipeEnd = (e: TouchEvent) => {
+  const t = e.changedTouches[0]!
+  const dx = t.clientX - swipe!.x
+  const dy = t.clientY - swipe!.y
+  swipe = null
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1)
 }
 onMounted(() => window.addEventListener('keydown', onKey))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
@@ -55,8 +69,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         </button>
         <span class="truncate text-md font-bold" data-testid="photo-caption">{{ current.caption }}</span>
       </header>
-      <div class="flex min-h-0 flex-1 items-center justify-center bg-card p-sm">
-        <img :src="current.image" :alt="current.caption" class="max-h-full max-w-full object-contain">
+      <div class="flex min-h-0 flex-1 touch-pan-y items-center justify-center bg-card p-sm" data-testid="photo-stage" @touchstart.passive="swipeStart" @touchend.passive="swipe && swipeEnd($event)" @touchcancel.passive="swipe = null">
+        <img :src="current.image" :alt="current.caption" class="max-h-full max-w-full select-none object-contain" draggable="false">
       </div>
     </div>
   </div>
