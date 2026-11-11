@@ -4,11 +4,11 @@ test.use({ viewport: { width: 1280, height: 820 } })
 
 const widget = (page: import('@playwright/test').Page) => page.locator('[data-widget="photo-carousel"]')
 
-test('the carousel shows a photo from Photos with one dot per photo and advances', async ({ page }) => {
+test('the carousel shows a photo from Photos with a window of dots and advances', async ({ page }) => {
   await page.clock.install()
   await page.goto('/')
   await expect(widget(page).getByTestId('carousel-photo')).toBeVisible()
-  await expect(widget(page).locator('[data-testid="carousel-dots"] button')).toHaveCount(12)
+  await expect(widget(page).locator('[data-testid="carousel-dots"] button')).toHaveCount(7)
   const first = await widget(page).getByTestId('carousel-photo').getAttribute('src')
   await page.clock.runFor(4100)
   await expect.poll(() => widget(page).getByTestId('carousel-photo').getAttribute('src')).not.toBe(first)
