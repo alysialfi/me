@@ -22,7 +22,7 @@ const step = (delta: number) => {
 </script>
 
 <template>
-  <div v-if="song" class="flex h-full flex-col gap-3 px-5 py-[18px]" data-testid="music-widget">
+  <div v-if="song" class="flex h-full flex-col justify-between gap-3 p-[18px]" data-testid="music-widget">
     <div class="flex items-center gap-3">
       <img v-if="song.cover" :src="song.cover" alt="" class="size-14 shrink-0 rounded-[12px] object-cover">
       <span v-else class="size-14 shrink-0 rounded-[12px] bg-wallpaper-teal" aria-hidden="true" />
