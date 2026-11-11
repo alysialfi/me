@@ -10,5 +10,6 @@ withDefaults(defineProps<{ id: WidgetId, size?: WidgetSize }>(), { size: 'M' })
   <PhotoCarouselWidget v-else-if="id === 'photo-carousel'" :size="size" />
   <CalendarWidget v-else-if="id === 'calendar'" :size="size" />
   <NotesWidget v-else-if="id === 'notes'" :size="size" />
+  <CoffeeWidget v-else-if="id === 'coffee'" />
   <MusicWidget v-else-if="id === 'music'" :size="size" />
 </template>

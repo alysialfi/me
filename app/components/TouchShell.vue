@@ -6,16 +6,20 @@ import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
 const wm = useWindowManager()
 const sheets = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'sheet'))
 const overlays = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'overlay'))
-// Below sm the widgets form two swipeable pages (Penpot Home / base / Page 1 and Page 2); from sm up they share one grid.
+// Below sm the widgets form three swipeable pages (Penpot Home / base / Page 1, Page 2 and the coffee page); from sm up they share one grid.
 const pages = [
   [
     { id: 'clock', cls: 'h-[76px] sm:col-span-1 sm:h-[140px]' },
-    { id: 'photo-carousel', cls: 'h-[200px] sm:col-span-1 sm:h-[140px]' },
-    { id: 'calendar', cls: 'h-[314px] sm:col-span-1 sm:h-[300px]' }
+    { id: 'calendar', cls: 'h-[314px] sm:col-span-1 sm:h-[300px]' },
+    { id: 'photo-carousel', cls: 'h-[200px] sm:col-span-1 sm:h-[140px]' }
   ],
   [
-    { id: 'notes', cls: 'h-[337px] sm:col-span-1 sm:h-[321px]' },
+    { id: 'notes', cls: 'min-h-[337px] max-sm:flex-1 sm:col-span-1 sm:h-[321px]' },
     { id: 'music', cls: 'h-[200px] sm:h-[170px] sm:col-span-2' }
+  ],
+  // Phone only: from sm up the coffee widget has no place in the two-column grid.
+  [
+    { id: 'coffee', cls: 'aspect-square w-full max-w-[360px] self-center' }
   ]
 ]
 const page = ref(0)
@@ -33,7 +37,7 @@ const onScroll = (e: Event) => {
       class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] max-sm:h-full sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-6 sm:pb-[140px] sm:pt-[60px] md:gap-6 md:px-8"
       @scroll.passive="onScroll"
     >
-      <div v-for="(group, i) in pages" :key="i" data-testid="home-page" class="flex w-full shrink-0 snap-center flex-col gap-4 px-4 pb-[130px] pt-[60px] max-sm:overflow-y-auto sm:contents">
+      <div v-for="(group, i) in pages" :key="i" data-testid="home-page" :class="[group[0]?.id === 'coffee' ? 'sm:hidden' : 'sm:contents', 'flex w-full shrink-0 snap-center flex-col gap-4 px-4 pb-[130px] pt-[60px] max-sm:overflow-y-auto']">
         <div v-for="w in group" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
           <HomeWidget :id="w.id as WidgetId" />
         </div>

@@ -1,4 +1,4 @@
-export type WidgetId = 'clock' | 'photo-carousel' | 'calendar' | 'notes' | 'music'
+export type WidgetId = 'clock' | 'photo-carousel' | 'calendar' | 'notes' | 'music' | 'coffee'
 
 // Surface of each widget in the Penpot design: none (clock), glass, light card (#F4F3F3) or white.
 export const WIDGET_SURFACE: Record<WidgetId, string> = {
@@ -6,5 +6,6 @@ export const WIDGET_SURFACE: Record<WidgetId, string> = {
   'photo-carousel': 'bg-card shadow-card',
   'calendar': 'bg-white shadow-card',
   'notes': 'bg-white shadow-card',
-  'music': 'glass'
+  'music': 'glass',
+  'coffee': ''
 }

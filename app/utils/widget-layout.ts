@@ -19,6 +19,7 @@ export interface WidgetSpec {
 export const WIDGET_SPECS: WidgetSpec[] = [
   { id: 'clock', anchor: 'left', min: 2, max: 4, initial: 2, col: 1, top: 0 },
   { id: 'photo-carousel', anchor: 'left', min: 2, max: 6, initial: 3, col: 1, top: 144 },
+  { id: 'coffee', anchor: 'left', min: 2, max: 3, initial: 2, col: 4, top: 400 },
   { id: 'calendar', anchor: 'left', min: 3, max: 6, initial: 4, col: 6, top: 0 },
   { id: 'notes', anchor: 'right', min: 2, max: 4, initial: 3, col: 10, top: 0 },
   { id: 'music', anchor: 'right', min: 3, max: 6, initial: 4, col: 9, top: 345 }
@@ -51,7 +52,8 @@ export const widthOf = (span: number, m: Pick<Metrics, 'colWidth' | 'gutter'>) =
 export function heightFor(id: WidgetId, size: WidgetSize, width: number): number | null {
   switch (id) {
     case 'photo-carousel': return Math.round(size === 'S' ? width : size === 'M' ? width * 1.1 : width * 0.64)
-    case 'calendar': return { S: 240, M: 314, L: 480 }[size]
+    case 'calendar': return size === 'L' ? 414 : 337
+    case 'coffee': return width
     case 'notes': return size === 'L' ? 414 : 337
     default: return null
   }
