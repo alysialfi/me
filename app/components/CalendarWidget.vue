@@ -20,13 +20,18 @@ const themed = computed(() => {
   return groups.value.map(g => ({ ...g, entries: g.entries.map(e => ({ ...e, theme: THEMES[n++ % THEMES.length]! })) }))
 })
 
-// One entry open at a time; a second click on it collapses it again.
-const expanded = ref<string | null>(null)
+// One entry open at a time; a second click on it collapses it again. DomaiNesia starts open.
+const expanded = ref<string | null>('Work at DomaiNesia')
+const root = ref<HTMLElement>()
+onMounted(() => {
+  const el = root.value?.querySelector<HTMLElement>('[data-expanded="true"]')
+  if (root.value && el) root.value.scrollTop = el.offsetTop - root.value.offsetTop - 8
+})
 const toggle = (title: string) => { expanded.value = expanded.value === title ? null : title }
 </script>
 
 <template>
-  <div class="flex h-full flex-col gap-xs overflow-y-auto p-6" data-testid="calendar-widget">
+  <div ref="root" class="relative flex h-full flex-col gap-xs overflow-y-auto p-6" data-testid="calendar-widget">
     <section v-for="(g, i) in themed" :key="g.year" :data-year="g.year" class="flex flex-col gap-1.5">
       <h3 :class="[i === 0 ? 'text-[#d8493e]' : 'text-[#6b7473]', 'text-xs font-bold']">{{ g.year }}</h3>
       <div
