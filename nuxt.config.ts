@@ -10,5 +10,11 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()]
+  },
+  hooks: {
+    // Skip idle prefetch of lazy chunks (markdown pipeline, iCal parser): they only matter once an app opens.
+    'build:manifest': (manifest) => {
+      for (const item of Object.values(manifest)) item.prefetch = false
+    }
   }
 })
