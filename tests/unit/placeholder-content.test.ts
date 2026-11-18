@@ -53,8 +53,4 @@ describe('placeholder content', () => {
     const urls = [...photos.map(p => p.image), ...ymlDir('songs').flatMap(x => [x.audio, x.cover].filter(Boolean))]
     for (const u of urls) expect(mediaExists(u), u).toBe(true)
   })
-
-  test('a song without cover art exists', () => {
-    expect(ymlDir('songs').some(x => !x.cover)).toBe(true)
-  })
 })

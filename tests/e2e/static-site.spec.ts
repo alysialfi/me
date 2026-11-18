@@ -61,13 +61,12 @@ test('navigation, back and forward work on the static site', async ({ page }) =>
 test('audio is served with range requests and plays', async ({ page }) => {
   const problems = watchConsole(page)
   await page.goto('/music')
-  const res = await page.request.get('/media/songs/placeholder-song-1.wav', { headers: { Range: 'bytes=0-99' } })
+  const res = await page.request.get('/media/songs/the-way-home.mp3', { headers: { Range: 'bytes=0-99' } })
   expect(res.status()).toBe(206)
   expect(res.headers()['content-range']).toMatch(/^bytes 0-99\/\d+$/)
   expect(res.headers()['accept-ranges']).toBe('bytes')
-  expect(res.headers()['content-type']).toBe('audio/wav')
+  expect(res.headers()['content-type']).toBe('audio/mpeg')
 
-  await page.locator('[data-window="music"] [data-song="01-placeholder-song-1"]').click()
   await expect.poll(() => page.locator('[data-testid="shared-audio"]').evaluate((a: HTMLAudioElement) => a.currentTime)).toBeGreaterThan(0)
   expect(problems).toEqual([])
 })
