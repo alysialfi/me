@@ -21,6 +21,7 @@ const chip = 'inline-flex items-center gap-[5px] rounded-[10px] px-2 py-[3px] te
       <div class="min-w-0 flex-1">
         <p class="truncate text-xl font-bold" data-testid="featured-title">{{ featured.title }}</p>
         <p class="truncate text-sm text-[#8a9291]">{{ featured.artist }}</p>
+        <a v-if="featured.credit" :href="featured.credit" target="_blank" rel="noopener" class="block truncate text-xs text-[#8a9291] underline" data-testid="song-credit">Music by {{ featured.artist }} on SoundCloud</a>
       </div>
       <button type="button" :aria-label="audio.isPlaying(featured) ? 'Pause' : 'Play'" data-testid="music-play" class="flex size-11 shrink-0 items-center justify-center rounded-full bg-ink" @click="audio.toggle(featured)">
         <svg v-if="!audio.isPlaying(featured)" viewBox="0 0 12 14" class="h-3.5 w-3 fill-white" aria-hidden="true"><path d="M0 0l12 7L0 14z" /></svg>
