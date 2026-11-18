@@ -5,7 +5,8 @@ test.use({ viewport: { width: 390, height: 844 } })
 
 async function expectTargetsAtLeast44(page: Page) {
   const small = await page.locator('button:visible, a:visible, [role="button"]:visible').evaluateAll(els =>
-    els.map((el) => {
+    // Inline links inside note prose are text, not tap controls.
+    els.filter(el => !el.closest('.note-prose')).map((el) => {
       const r = el.getBoundingClientRect()
       return { label: el.getAttribute('aria-label') || el.textContent?.trim() || el.tagName, w: Math.round(r.width), h: Math.round(r.height) }
     }).filter(t => t.w < 44 || t.h < 44))
