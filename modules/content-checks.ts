@@ -14,7 +14,7 @@ export default defineNuxtModule({
     nuxt.options.runtimeConfig.public.knownContent = known
     nuxt.options.nitro.prerender = {
       ...nuxt.options.nitro.prerender,
-      routes: [...(nuxt.options.nitro.prerender?.routes || []), ...prerenderRoutes(known)]
+      routes: [...(nuxt.options.nitro.prerender?.routes || []), ...prerenderRoutes(known), '/sitemap.xml']
     }
     nuxt.options.nitro.publicAssets = [
       ...(nuxt.options.nitro.publicAssets || []),
