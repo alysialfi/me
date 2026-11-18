@@ -36,7 +36,8 @@ export function makeSchemas(z: any) {
       cover: z.string().optional(),
       audio: z.string().min(1),
       genre: z.enum(['pop', 'lo-fi', 'jazz', 'rock']).optional(),
-      duration: z.number().positive().optional()
+      duration: z.number().positive().optional(),
+      credit: z.string().url().optional()
     }),
     contact: z.object({
       fullName: z.string().min(1),

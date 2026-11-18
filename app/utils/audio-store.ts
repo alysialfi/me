@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 
-export interface Song { id: string, title: string, artist: string, cover?: string, audio: string, genre?: 'pop' | 'lo-fi' | 'jazz' | 'rock', duration?: number }
+export interface Song { id: string, title: string, artist: string, cover?: string, audio: string, genre?: 'pop' | 'lo-fi' | 'jazz' | 'rock', duration?: number, credit?: string }
 
 // The slice of HTMLAudioElement the store relies on (lets tests pass a fake).
 export interface AudioLike {
