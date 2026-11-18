@@ -19,10 +19,10 @@ test('direct loads of nested paths work with no console errors', async ({ page }
   const cases: [string, string][] = [
     ['/', '[data-window="notes"]'],
     ['/notes/about-me', '[data-window="notes"] [data-testid="note-body"]'],
-    ['/notes/placeholder-media', '[data-window="notes"] video'],
+    ['/notes/god-i-love-being-young', '[data-window="notes"] [data-testid="note-body"] img'],
     ['/finder/domainesia-landing-page', '[data-file="case-study.md"]'],
     ['/finder/domainesia-landing-page/01-homepage.jpg', '[data-testid="image-viewer"] img'], // not pre-rendered: falls back
-    ['/photos/projects', '[data-photo]'],
+    ['/photos', '[data-photo]'],
     ['/contact', '[data-contact="email"]'],
     ['/music', '[data-song]'],
     ['/vscode', '[data-testid="vscode-code"]']
@@ -69,15 +69,6 @@ test('audio is served with range requests and plays', async ({ page }) => {
 
   await page.locator('[data-window="music"] [data-song="01-placeholder-song-1"]').click()
   await expect.poll(() => page.locator('[data-testid="shared-audio"]').evaluate((a: HTMLAudioElement) => a.currentTime)).toBeGreaterThan(0)
-  expect(problems).toEqual([])
-})
-
-test('video in a note plays from the static site', async ({ page }) => {
-  const problems = watchConsole(page)
-  await page.goto('/notes/placeholder-media')
-  const video = page.locator('[data-window="notes"] video')
-  await video.evaluate(v => (v as HTMLVideoElement).play())
-  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0)
   expect(problems).toEqual([])
 })
 

@@ -1,6 +1,7 @@
 import { watch, nextTick, type Ref } from 'vue'
 import type { Router } from 'vue-router'
-import { buildRoute, parseRoute, type KnownContent } from './routes'
+import type { KnownContent } from '#shared/apps'
+import { buildRoute, parseRoute } from './routes'
 import type { WindowManager, WindowSnapshot } from './window-manager'
 
 interface Options {

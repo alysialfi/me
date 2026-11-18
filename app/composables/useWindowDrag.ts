@@ -1,5 +1,5 @@
 import { clampPosition } from '~/utils/window-geometry'
-import type { AppId } from '~/utils/window-manager'
+import type { AppId } from '#shared/apps'
 
 // Drag a desktop window by its title bar; the URL is never touched.
 export function useWindowDrag(app: AppId) {

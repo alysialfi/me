@@ -55,6 +55,7 @@ test('known content lists notes, projects and files, and prerender routes skip f
   const known = knownContent(root)
   expect(known).toEqual({ notes: ['about-me'], projects: { x: ['shot.png'] } })
   const routes = prerenderRoutes(known)
-  expect(routes).toEqual(expect.arrayContaining(['/', '/finder', '/notes/about-me', '/finder/x', '/photos/personal']))
+  expect(routes).toEqual(expect.arrayContaining(['/', '/finder', '/notes/about-me', '/finder/x', '/photos']))
+  expect(routes.some(r => r.startsWith('/photos/'))).toBe(false)
   expect(routes.some(r => r.endsWith('.png'))).toBe(false)
 })

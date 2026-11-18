@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { APPS } from '~/utils/apps'
+import { APPS } from '#shared/apps'
 import { MENU_BAR_HEIGHT } from '~/utils/window-geometry'
 import { RESIZE_HANDLES } from '~/composables/useWindowResize'
 import type { AppWindow } from '~/utils/window-manager'

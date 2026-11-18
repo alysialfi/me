@@ -14,7 +14,7 @@ describe('parseRoute', () => {
     ['/finder', { app: 'finder', view: {} }],
     ['/finder/project-x', { app: 'finder', view: { project: 'project-x' } }],
     ['/finder/project-x/spec.pdf', { app: 'finder', view: { project: 'project-x', file: 'spec.pdf' } }],
-    ['/photos/personal', { app: 'photos', view: { album: 'personal' } }],
+    ['/photos', { app: 'photos', view: {} }],
     ['/contact', { app: 'contact', view: {} }],
     ['/music', { app: 'music', view: {} }],
     ['/vscode', { app: 'vscode', view: {} }]
@@ -27,7 +27,7 @@ describe('parseRoute', () => {
   })
 
   test('unknown app, extra segments and unknown names are not found', () => {
-    for (const path of ['/nope', '/contact/extra', '/finder/a/b/c', '/photos/missing']) {
+    for (const path of ['/nope', '/contact/extra', '/finder/a/b/c', '/photos/missing', '/photos/personal']) {
       expect(parseRoute(path, null, known)).toMatchObject({ focus: null, notFound: true })
     }
     expect(parseRoute('/notes/missing', null, known).notFound).toBe(true)

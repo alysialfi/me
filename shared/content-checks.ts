@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { extname, join } from 'node:path'
+import { prerenderPaths, type KnownContent } from './apps'
 import { PROJECT_FILE_EXTENSIONS } from './content-schemas'
 
 export interface ProjectFile { name: string, type: 'image' | 'doc' }
@@ -32,8 +33,6 @@ export function checkProjectFiles(projectsDir: string): Record<string, ProjectFi
   return result
 }
 
-export interface KnownContent { notes: string[], projects: Record<string, string[]> }
-
 export function listNotes(notesDir: string): string[] {
   return existsSync(notesDir) ? readdirSync(notesDir).filter(f => f.endsWith('.md')).map(f => f.replace(/\.md$/, '')).sort() : []
 }
@@ -47,16 +46,8 @@ export function knownContent(contentDir: string): KnownContent {
   }
 }
 
-export const ALBUM_NAMES = ['all', 'personal', 'projects']
-
-// Paths pre-rendered as static HTML. File paths (e.g. /finder/x/a.pdf) are left to the
-// server's fallback to the home page, because a path ending in an extension would be
-// written as a file with that extension.
+// Paths pre-rendered as static HTML, derived from the App catalogue. File paths
+// (e.g. /finder/x/a.pdf) are left to the server's fallback to the home page.
 export function prerenderRoutes(known: KnownContent): string[] {
-  return [
-    '/', '/notes', '/finder', '/photos', '/contact', '/music', '/vscode',
-    ...known.notes.map(n => `/notes/${n}`),
-    ...Object.keys(known.projects).map(p => `/finder/${p}`),
-    ...ALBUM_NAMES.map(a => `/photos/${a}`)
-  ]
+  return prerenderPaths(known)
 }

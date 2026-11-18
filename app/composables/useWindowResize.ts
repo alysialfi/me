@@ -1,5 +1,5 @@
 import { resizeRect, type Handle } from '~/utils/window-geometry'
-import type { AppId } from '~/utils/window-manager'
+import type { AppId } from '#shared/apps'
 
 export const RESIZE_HANDLES: Handle[] = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
 

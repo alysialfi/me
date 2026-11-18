@@ -1,16 +1,25 @@
 <script setup lang="ts">
-import { APPS } from '~/utils/apps'
+import type { Component } from 'vue'
+import { ContactApp, FinderApp, MusicApp, NotesApp, PhotosApp, VsCodeApp } from '#components'
+import type { AppId } from '#shared/apps'
 import type { AppWindow } from '~/utils/window-manager'
 
 defineProps<{ window: AppWindow }>()
+
+// One view per app; a missing entry fails the type check.
+const VIEWS: Record<AppId, Component> = {
+  photos: PhotosApp,
+  contact: ContactApp,
+  notes: NotesApp,
+  finder: FinderApp,
+  music: MusicApp,
+  vscode: VsCodeApp
+}
+
+// Apps whose view takes the window prop. The others would get it as a stray attribute.
+const TAKES_WINDOW = new Set<AppId>(['notes', 'finder', 'photos'])
 </script>
 
 <template>
-  <NotesApp v-if="window.app === 'notes'" :window="window" />
-  <FinderApp v-else-if="window.app === 'finder'" :window="window" />
-  <ContactApp v-else-if="window.app === 'contact'" />
-  <PhotosApp v-else-if="window.app === 'photos'" :window="window" />
-  <MusicApp v-else-if="window.app === 'music'" />
-  <VsCodeApp v-else-if="window.app === 'vscode'" />
-  <div v-else class="p-md text-md">{{ APPS[window.app].title }}</div>
+  <component :is="VIEWS[window.app]" v-bind="TAKES_WINDOW.has(window.app) ? { window } : {}" />
 </template>

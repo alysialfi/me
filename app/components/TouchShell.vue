@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DOCK_ORDER } from '~/utils/apps'
+import { APP_IDS } from '#shared/apps'
 import { widget, type WidgetId } from '~/utils/widgets'
 
 // iPadOS (md) and iOS (below md) home screens, driven by Tailwind breakpoints.
@@ -48,7 +48,7 @@ const onScroll = (e: Event) => {
     </div>
 
     <nav data-testid="dock" aria-label="Dock" class="glass fixed bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-[20px] p-2 min-[380px]:gap-3 min-[380px]:p-3 sm:bottom-6 sm:gap-3 sm:rounded-[18px] sm:px-3 sm:py-2">
-      <AppIcon v-for="id in DOCK_ORDER" :key="id" :app="id" size="adaptive" @click="wm.open(id)" />
+      <AppIcon v-for="id in APP_IDS" :key="id" :app="id" size="adaptive" @click="wm.open(id)" />
     </nav>
 
     <AppOverlay v-for="w in overlays" :key="w.app" :window="w" />

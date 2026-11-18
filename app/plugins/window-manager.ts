@@ -1,6 +1,6 @@
 import { createWindowManager } from '~/utils/window-manager'
 import { startUrlSync } from '~/utils/url-sync'
-import type { KnownContent } from '~/utils/routes'
+import type { KnownContent } from '#shared/apps'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { width, mode } = useViewport()

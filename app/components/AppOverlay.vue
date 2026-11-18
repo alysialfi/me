@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { APPS } from '~/utils/apps'
+import { APPS } from '#shared/apps'
 import type { AppWindow } from '~/utils/window-manager'
 
 const props = defineProps<{ window: AppWindow }>()

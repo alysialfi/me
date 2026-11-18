@@ -1,15 +1,12 @@
 import { computed, reactive, ref, watch, type Ref } from 'vue'
 import type { ViewportMode } from './viewport'
+import type { AppId, AppView } from '#shared/apps'
 import { defaultRect, type Screen } from './window-geometry'
 
-export const APP_IDS = ['notes', 'finder', 'photos', 'contact', 'music', 'vscode'] as const
-export type AppId = typeof APP_IDS[number]
 export type WindowState = 'normal' | 'minimized' | 'fullscreen'
 export type Presentation = 'window' | 'overlay' | 'sheet'
 
 export interface Rect { x: number, y: number, w: number, h: number }
-// What an app shows: a note, a project folder (and file), or a photo album.
-export interface AppView { note?: string, project?: string, file?: string, album?: string }
 
 export interface AppWindow {
   app: AppId

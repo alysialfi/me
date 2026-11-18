@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { APPS } from '~/utils/apps'
+import { APPS } from '#shared/apps'
 import { formatDate, startClock } from '~/utils/clock'
 const wm = useWindowManager()
 const items = ['finder', 'notes', 'music'] as const

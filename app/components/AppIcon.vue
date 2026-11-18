@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { APPS } from '~/utils/apps'
-import type { AppId } from '~/utils/window-manager'
+import { APPS, type AppId } from '#shared/apps'
 
 // lg = 44px (desktop and iPadOS dock); sm = 64px; adaptive = 44px, so six fit across a phone dock.
 withDefaults(defineProps<{ app: AppId, running?: boolean, size?: 'lg' | 'sm' | 'adaptive' }>(), { running: false, size: 'lg' })
