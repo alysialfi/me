@@ -4,18 +4,20 @@ const audio = useAudio()
 const { songs } = await useSongs()
 
 // Background track: starts only once the page has fully loaded, so it never competes with first paint.
-// Browsers block sound until the visitor interacts, so a blocked attempt retries on the first gesture.
+// Browsers block sound until the visitor interacts, so a blocked attempt retries after the first gesture,
+// unless the visitor has already started something by then.
 onMounted(() => {
+  const song = () => songs.value.find(s => s.id === 'the-way-home')
   const start = async () => {
-    const song = songs.value.find(s => s.id === 'the-way-home')
-    if (!song || audio.state.current) return
-    await audio.play(song)
+    const s = song()
+    if (!s || audio.state.playing) return
+    await audio.play(s)
     if (!audio.state.playing) armGesture()
   }
   const armGesture = () => {
-    const events = ['pointerdown', 'keydown', 'touchstart'] as const
+    const events = ['click', 'keydown', 'touchend'] as const
     const once = () => { events.forEach(e => removeEventListener(e, once)); start() }
-    events.forEach(e => addEventListener(e, once, { once: true }))
+    events.forEach(e => addEventListener(e, once))
   }
   const afterLoad = () => setTimeout(start, 0)
   if (document.readyState === 'complete') afterLoad()

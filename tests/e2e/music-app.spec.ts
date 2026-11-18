@@ -66,3 +66,20 @@ test('playback continues after the Music window closes', async ({ page }) => {
   await page.locator('[data-testid="dock"] [data-app="music"]').click()
   await expect(song(page)).toHaveAttribute('data-state', 'playing')
 })
+
+test('when the browser blocks autoplay, the first click starts the song', async ({ page }) => {
+  await page.addInitScript(() => {
+    const play = HTMLMediaElement.prototype.play
+    let blocked = true
+    addEventListener('click', () => { blocked = false }, true)
+    HTMLMediaElement.prototype.play = function () {
+      return blocked ? Promise.reject(new DOMException('blocked', 'NotAllowedError')) : play.call(this)
+    }
+  })
+  await page.goto('/music')
+  await expect(song(page)).toBeVisible()
+  await expect(song(page)).toHaveAttribute('data-state', 'paused')
+  await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
+  await expect(page.locator('[data-window]')).toHaveCount(0)
+  await expect(page.locator('[data-widget="music"]').getByTestId('widget-play')).toHaveAttribute('data-state', 'playing')
+})
