@@ -1,14 +1,20 @@
 import { expect, test } from '@playwright/test'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { parse } from 'yaml'
 
 test.use({ viewport: { width: 1280, height: 820 } })
+
+// The photo years in content/photos, newest first, so new photos do not break these tests.
+const YEARS = [...new Set(readdirSync('content/photos').filter(f => f.endsWith('.yml')).map(f => String(parse(readFileSync(join('content/photos', f), 'utf8')).year)))].sort().reverse()
 
 const photos = (page: import('@playwright/test').Page) => page.locator('[data-window="photos"] [data-photo]')
 
 test('photos are grouped under year headings, newest first', async ({ page }) => {
   await page.goto('/photos')
   const years = page.locator('[data-window="photos"] [data-year]')
-  await expect(years).toHaveCount(4)
-  expect(await years.evaluateAll(els => els.map(e => e.getAttribute('data-year')))).toEqual(['2026', '2024', '2023', '2022'])
+  await expect(years).toHaveCount(YEARS.length)
+  expect(await years.evaluateAll(els => els.map(e => e.getAttribute('data-year')))).toEqual(YEARS)
   await expect(years.first().locator('[data-photo]')).not.toHaveCount(0)
   const box = (await photos(page).first().boundingBox())!
   expect(Math.round(box.width)).toBe(130)

@@ -1,7 +1,18 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { parse } from 'yaml'
 
 const finder = (page: Page) => page.locator('[data-window="finder"]')
+
+// The project folders in content/projects, sorted by name as Finder lists them, so adding a
+// project does not break these tests.
+const PROJECTS = readdirSync('content/projects', { withFileTypes: true })
+  .filter(d => d.isDirectory())
+  .map(d => ({ slug: d.name, name: String(parse(readFileSync(join('content/projects', d.name, 'project.yml'), 'utf8')).name) }))
+  .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+  .map(p => p.slug)
 
 test.describe('desktop', () => {
   test.use({ viewport: { width: 1280, height: 820 } })
@@ -9,13 +20,14 @@ test.describe('desktop', () => {
   test('folders are listed alphabetically; double-click opens, back returns', async ({ page }) => {
     await page.goto('/finder')
     const folders = finder(page).locator('[data-project]')
-    await expect(folders).toHaveCount(6)
-    expect(await folders.evaluateAll(els => els.map(e => e.getAttribute('data-project')))).toEqual(['binus-final-exams', 'domainesia-landing-page', 'domainesia-user-dashboard', 'lunash-dashboard', 'tmla-landing-page', 'mentor-and-speaker'])
-    await expect(folders.nth(1)).toContainText('DomaiNesia Landing Page')
+    await expect(folders).toHaveCount(PROJECTS.length)
+    expect(await folders.evaluateAll(els => els.map(e => e.getAttribute('data-project')))).toEqual(PROJECTS)
+    const landing = finder(page).locator('[data-project="domainesia-landing-page"]')
+    await expect(landing).toContainText('DomaiNesia Landing Page')
 
-    await folders.nth(1).click() // single click only selects
+    await landing.click() // single click only selects
     await expect(finder(page).getByTestId('project-files')).toHaveCount(0)
-    await folders.nth(1).dblclick()
+    await landing.dblclick()
     const files = finder(page).locator('[data-file]')
     await expect(files).toHaveCount(6)
     await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/domainesia-landing-page')
@@ -24,7 +36,7 @@ test.describe('desktop', () => {
     await expect(finder(page).locator('[data-file="case-study.md"] [data-testid="file-thumb"]')).toHaveCount(0)
 
     await finder(page).getByTestId('finder-back').click()
-    await expect(finder(page).locator('[data-project]')).toHaveCount(6)
+    await expect(finder(page).locator('[data-project]')).toHaveCount(PROJECTS.length)
     await expect.poll(() => new URL(page.url()).pathname).toBe('/finder')
   })
 
@@ -42,7 +54,7 @@ test.describe('touch', () => {
     await finder(page).locator('[data-project="domainesia-landing-page"]').click()
     await expect(finder(page).locator('[data-file]')).toHaveCount(6)
     await finder(page).getByTestId('finder-back').click()
-    await expect(finder(page).locator('[data-project]')).toHaveCount(6)
+    await expect(finder(page).locator('[data-project]')).toHaveCount(PROJECTS.length)
   })
 })
 

@@ -9,10 +9,13 @@ test('the calendar groups entries by year with an accent bar, title and period',
   const years = await widget.locator('[data-year]').evaluateAll(els => els.map(e => e.getAttribute('data-year')))
   expect(years).toEqual(['2024', '2023', '2022', '2021', '2016']) // newest first
 
-  const current = widget.locator('[data-year="2024"]').getByTestId('calendar-entry').filter({ hasText: 'Work at Lunash' })
-  await expect(current).toContainText('Work at Lunash')
-  await expect(current.getByTestId('calendar-period')).toHaveText('2024 – now')
+  const current = widget.locator('[data-year="2021"]').getByTestId('calendar-entry').filter({ hasText: 'Work at DomaiNesia' })
+  await expect(current).toContainText('Work at DomaiNesia')
+  await expect(current.getByTestId('calendar-period')).toHaveText('2021 – now')
   await expect(current.getByTestId('calendar-bar')).toBeVisible()
+
+  const past = widget.locator('[data-year="2024"]').getByTestId('calendar-entry').filter({ hasText: 'Work at Lunash' })
+  await expect(past.getByTestId('calendar-period')).toHaveText('2024 – 2025')
 
   const school = widget.locator('[data-year="2016"]').getByTestId('calendar-entry')
   await expect(school.getByTestId('calendar-period')).toHaveText('2016 – 2019')

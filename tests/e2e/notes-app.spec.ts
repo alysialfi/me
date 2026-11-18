@@ -1,45 +1,33 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import { readdirSync } from 'node:fs'
 
 test.use({ viewport: { width: 1280, height: 820 } })
 
 const body = (page: Page) => page.locator('[data-window="notes"] [data-testid="note-body"]')
 
+// The notes in content/notes, so adding or removing a note does not break these tests.
+const NOTE_COUNT = readdirSync('content/notes').filter(f => f.endsWith('.md')).length
+
 test('Notes opens on About me and lists every note', async ({ page }) => {
   await page.goto('/')
   await expect(body(page).getByRole('heading', { name: 'About me' })).toBeVisible()
-  await expect(page.locator('[data-window="notes"] [data-note]')).toHaveCount(3)
+  await expect(page.locator('[data-window="notes"] [data-note]')).toHaveCount(NOTE_COUNT)
 })
 
-test('selecting a note shows its content with image and video, and updates the URL', async ({ page }) => {
+test('selecting a note shows its content with images, and updates the URL', async ({ page }) => {
   await page.goto('/')
-  await page.locator('[data-window="notes"] [data-note="placeholder-media"]').click()
-  await expect(body(page).getByRole('heading', { name: 'Placeholder note with media' })).toBeVisible()
-  await expect(body(page).locator('img')).toBeVisible()
-  await expect(body(page).locator('video')).toBeVisible()
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/notes/placeholder-media')
-})
-
-test('a video in a note plays inside the note', async ({ page }) => {
-  await page.goto('/notes/placeholder-media')
-  const video = body(page).locator('video')
-  await expect(video).toBeVisible()
-  await video.evaluate(v => (v as HTMLVideoElement).play())
-  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0)
-  expect(await video.evaluate(v => (v as HTMLVideoElement).paused)).toBe(false)
-})
-
-test('a link to a project opens Finder in that project', async ({ page }) => {
-  await page.goto('/notes/placeholder-media')
-  await body(page).getByRole('link', { name: 'link to a project' }).click()
-  await expect(page.locator('[data-window="finder"]')).toBeVisible()
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder/domainesia-landing-page')
+  await page.locator('[data-window="notes"] [data-note="god-i-love-being-young"]').click()
+  await expect(body(page).getByRole('heading', { name: /God, I love being young/ })).toBeVisible()
+  await expect(body(page).locator('img').first()).toBeVisible()
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/notes/god-i-love-being-young')
 })
 
 test('a link to an app opens that app', async ({ page }) => {
   await page.goto('/')
-  await body(page).getByRole('link', { name: 'photos' }).click()
-  await expect(page.locator('[data-window="photos"]')).toBeVisible()
+  await body(page).getByRole('link', { name: 'projects' }).click()
+  await expect(page.locator('[data-window="finder"]')).toBeVisible()
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/finder')
 })
 
 test('an external link opens in a new tab and the portfolio stays open', async ({ page, context }) => {

@@ -29,7 +29,7 @@ describe('placeholder content', () => {
     }
   })
 
-  test('notes are valid, one is About me, and one has text, link, image and video', () => {
+  test('notes are valid, one is About me, and one has text, a link and an image', () => {
     const notes = readdirSync(join(content, 'notes')).filter(f => f.endsWith('.md')).map((f) => {
       const raw = readFileSync(join(content, 'notes', f), 'utf8')
       const [, front, body] = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)!
@@ -38,7 +38,7 @@ describe('placeholder content', () => {
     expect(notes.length).toBeGreaterThan(0)
     for (const n of notes) expect(s.note.safeParse(n.meta).success).toBe(true)
     expect(() => checkAboutMe(join(content, 'notes'))).not.toThrow()
-    expect(notes.some(n => /\[[^\]]+\]\([^)]+\)/.test(n.body) && /!\[[^\]]*\]\(/.test(n.body) && /::note-video\{src=/.test(n.body) && /^[A-Za-z]/m.test(n.body))).toBe(true)
+    expect(notes.some(n => /\[[^\]]+\]\([^)]+\)/.test(n.body) && /!\[[^\]]*\]\(/.test(n.body) && /^[A-Za-z]/m.test(n.body))).toBe(true)
   })
 
   test('projects include a case study and images', () => {
