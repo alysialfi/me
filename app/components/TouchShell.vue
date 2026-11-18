@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { DOCK_ORDER } from '~/utils/apps'
-import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
+import { widget, type WidgetId } from '~/utils/widgets'
 
 // iPadOS (md) and iOS (below md) home screens, driven by Tailwind breakpoints.
 const wm = useWindowManager()
 const sheets = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'sheet'))
 const overlays = computed(() => wm.visible.value.filter(w => wm.presentation(w) === 'overlay'))
 // Below sm the widgets form three swipeable pages (Penpot Home / base / Page 1, Page 2 and the coffee page); from sm up they share one grid.
-const pages = [
+const pages: { id: WidgetId, cls: string }[][] = [
   [
     { id: 'clock', cls: 'h-[76px] sm:col-span-1 sm:h-[140px]' },
     { id: 'calendar', cls: 'h-[314px] sm:col-span-1 sm:h-[300px]' },
@@ -38,8 +38,8 @@ const onScroll = (e: Event) => {
       @scroll.passive="onScroll"
     >
       <div v-for="(group, i) in pages" :key="i" data-testid="home-page" :class="[group[0]?.id === 'coffee' ? 'sm:hidden' : 'sm:contents', 'flex w-full shrink-0 snap-center flex-col gap-4 px-4 pb-[130px] pt-[60px] max-sm:overflow-y-auto']">
-        <div v-for="w in group" :key="w.id" :data-widget="w.id" :class="[w.cls, WIDGET_SURFACE[w.id as WidgetId], 'overflow-hidden rounded-card']">
-          <HomeWidget :id="w.id as WidgetId" />
+        <div v-for="w in group" :key="w.id" :data-widget="w.id" :class="[w.cls, widget(w.id).surface, 'overflow-hidden rounded-card']">
+          <HomeWidget :id="w.id" />
         </div>
       </div>
     </div>

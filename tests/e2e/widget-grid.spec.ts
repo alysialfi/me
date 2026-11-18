@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { WIDGETS, heightAt } from '../../app/utils/widgets'
 
 test.use({ viewport: { width: 1280, height: 820 } })
 
@@ -8,14 +9,13 @@ const GUTTER = 24
 const COL = (GRID - 11 * GUTTER) / 12
 const span = (n: number) => n * COL + (n - 1) * GUTTER
 
-const SPANS: Record<string, number> = { 'clock': 2, 'photo-carousel': 3, 'notes': 3, 'calendar': 4, 'music': 4, 'coffee': 2 }
 // Widths in the Penpot "Home / xl" board.
 const DESIGN: Record<string, number> = { 'clock': 183, 'photo-carousel': 286, 'notes': 286, 'calendar': 389, 'music': 389, 'coffee': 183 }
 
-test('widgets span 2, 3, 3, 4, 4 and 2 of 12 columns at 1280px', async ({ page }) => {
+test('widgets span their catalogue columns at 1280px', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('[data-widget]')).toHaveCount(6)
-  for (const [id, n] of Object.entries(SPANS)) {
+  await expect(page.locator('[data-widget]')).toHaveCount(WIDGETS.length)
+  for (const { id, span: n } of WIDGETS) {
     const box = (await page.locator(`[data-widget="${id}"]`).boundingBox())!
     expect(box.width, `${id} width`).toBeCloseTo(span(n), 0)
     expect(Math.abs(box.width - DESIGN[id]!), `${id} vs design`).toBeLessThanOrEqual(1)
@@ -24,7 +24,7 @@ test('widgets span 2, 3, 3, 4, 4 and 2 of 12 columns at 1280px', async ({ page }
 
 test('widgets sit on the design columns', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('[data-widget]')).toHaveCount(6)
+  await expect(page.locator('[data-widget]')).toHaveCount(WIDGETS.length)
   const x = async (id: string) => Math.round((await page.locator(`[data-widget="${id}"]`).boundingBox())!.x)
   expect(await x('clock')).toBe(32)
   expect(await x('photo-carousel')).toBe(32)
@@ -34,17 +34,34 @@ test('widgets sit on the design columns', async ({ page }) => {
   expect(await x('music')).toBe(859)
 })
 
-test('widgets are not resizable', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.locator('[data-resize-widget]')).toHaveCount(0)
-})
-
-test('widget content follows its size', async ({ page }) => {
+test('notes in the widget show their dates', async ({ page }) => {
   await page.goto('/')
   await page.locator('[data-testid="desktop"]').click({ position: { x: 5, y: 700 } })
   await expect(page.locator('[data-widget="notes"] [data-note]').first()).toContainText(/\d{4}/)
-  await expect(page.locator('[data-widget="music"]').getByTestId('up-next')).toHaveCount(0)
 })
+
+// Each widget is as tall as its height rule says, and its content fits, at every desktop width.
+// Widgets that scroll by design (calendar, notes) keep the scrolling inside, so the widget itself
+// never overflows.
+for (const width of [1024, 1440, 1920, 2560]) {
+  test.describe(`at ${width}px`, () => {
+    test.use({ viewport: { width, height: 900 } })
+
+    test('widget heights follow their height rule and content fits', async ({ page }) => {
+      await page.goto('/')
+      await expect(page.locator('[data-widget]')).toHaveCount(WIDGETS.length)
+      // Content loads after the page appears: wait until every widget has rendered and its images are in.
+      await page.waitForFunction(n => [...document.querySelectorAll('[data-widget]')].filter(w => w.firstElementChild).length === n, WIDGETS.length)
+      await page.waitForFunction(() => [...document.querySelectorAll<HTMLImageElement>('[data-widget] img')].every(i => i.complete))
+      for (const { id, height } of WIDGETS) {
+        const el = page.locator(`[data-widget="${id}"]`)
+        const m = await el.evaluate(e => ({ width: e.getBoundingClientRect().width, height: e.getBoundingClientRect().height, scroll: e.scrollHeight, client: e.clientHeight }))
+        expect(Math.abs(m.height - heightAt(height, m.width)), `${id} height at ${m.width}px wide`).toBeLessThanOrEqual(1)
+        expect(m.scroll, `${id} content overflows`).toBeLessThanOrEqual(m.client)
+      }
+    })
+  })
+}
 
 const dragBy = async (page: import('@playwright/test').Page, id: string, dx: number, dy: number, release = true) => {
   const box = (await page.locator(`[data-widget="${id}"]`).boundingBox())!

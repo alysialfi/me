@@ -1,15 +1,21 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import type { WidgetId } from '~/utils/widgets'
-import type { WidgetSize } from '~/utils/widget-layout'
+import { CalendarWidget, ClockWidget, CoffeeWidget, MusicWidget, NotesWidget, PhotoCarouselWidget } from '#components'
 
-withDefaults(defineProps<{ id: WidgetId, size?: WidgetSize }>(), { size: 'M' })
+defineProps<{ id: WidgetId }>()
+
+// Every catalogue entry must have a component: a missing one fails the type check.
+const COMPONENTS: Record<WidgetId, Component> = {
+  'clock': ClockWidget,
+  'photo-carousel': PhotoCarouselWidget,
+  'coffee': CoffeeWidget,
+  'calendar': CalendarWidget,
+  'notes': NotesWidget,
+  'music': MusicWidget
+}
 </script>
 
 <template>
-  <ClockWidget v-if="id === 'clock'" />
-  <PhotoCarouselWidget v-else-if="id === 'photo-carousel'" :size="size" />
-  <CalendarWidget v-else-if="id === 'calendar'" :size="size" />
-  <NotesWidget v-else-if="id === 'notes'" :size="size" />
-  <CoffeeWidget v-else-if="id === 'coffee'" />
-  <MusicWidget v-else-if="id === 'music'" :size="size" />
+  <component :is="COMPONENTS[id]" />
 </template>

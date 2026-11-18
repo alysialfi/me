@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { WIDGET_SURFACE, type WidgetId } from '~/utils/widgets'
-import { WIDGET_SPECS, defaultLayout, heightFor, heightOf, sizeFor, snapDrop, widthOf, type Layout, type Metrics, type Place } from '~/utils/widget-layout'
+import { widget, type WidgetId } from '~/utils/widgets'
+import { DEFAULT_METRICS, defaultBoard, ghost as ghostOf, layout, measure as measureBoard, movePointer, pressWidget, release, type Board, type Geometry, type Metrics } from '~/utils/desktop-board'
 import { GENIE_MS, GENIE_STRIPS, genieStrips } from '~/utils/genie'
 const wm = useWindowManager()
 
@@ -72,19 +72,13 @@ const onLeave = (el: Element, done: () => void) => {
   if (w?.state === 'minimized') genie(el, 'out', done)
   else done()
 }
-// 12-column grid, 24px gutters, widgets placed per the Penpot Home / xl board. Widgets resize
-// between the columns of the "Widget Sizes" board and can be dragged onto free space only.
-// The arrangement is not kept: a reload returns every widget to its default place and size.
-const GUTTER = 24
-const WIDGET_AREA_TOP = 60
-// Room kept clear at the bottom of the screen for the dock.
-const DOCK_RESERVE = 100
+// 12-column grid, 24px gutters, widgets placed per the Penpot Home / xl board (see utils/desktop-board).
+// Widgets can be dragged onto free space only; a reload returns every widget to its default place.
 const grid = ref<HTMLElement>()
-const layout = ref<Layout>(defaultLayout())
-const metrics = reactive<Metrics>({ colWidth: (1280 - 64 - 11 * GUTTER) / 12, gutter: GUTTER, maxBottom: 820 - WIDGET_AREA_TOP - DOCK_RESERVE })
+const board = ref<Board>(defaultBoard())
+const metrics = ref<Metrics>(DEFAULT_METRICS)
 const measure = () => {
-  if (grid.value) metrics.colWidth = (grid.value.clientWidth - 11 * GUTTER) / 12
-  metrics.maxBottom = window.innerHeight - WIDGET_AREA_TOP - DOCK_RESERVE
+  metrics.value = measureBoard(grid.value?.clientWidth ?? 1280 - 64, window.innerHeight)
 }
 onMounted(() => {
   measure()
@@ -93,39 +87,25 @@ onMounted(() => {
 onUnmounted(() => window.removeEventListener('resize', measure))
 
 // While a widget is dragged it follows the pointer; a ghost shows the slot it would snap to.
-const drag = ref<{ id: WidgetId, dx: number, dy: number, target: Place, free: boolean } | null>(null)
 let justDragged = false
-const DRAG_THRESHOLD = 6
-
 function startDrag(id: WidgetId, e: PointerEvent) {
   if (e.button !== 0) return
-  const widget = e.currentTarget as HTMLElement
-  const startX = e.clientX
-  const startY = e.clientY
-  const origin = widget.getBoundingClientRect()
+  const origin = (e.currentTarget as HTMLElement).getBoundingClientRect()
   const area = grid.value!.getBoundingClientRect()
-  let moving = false
+  board.value = pressWidget(board.value, id, { x: e.clientX, y: e.clientY }, { x: origin.left - area.left, y: origin.top - area.top })
   const move = (ev: PointerEvent) => {
-    const dx = ev.clientX - startX
-    const dy = ev.clientY - startY
-    if (!moving && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
-    moving = true
-    const { place, free } = snapDrop(id, origin.left - area.left + dx, origin.top - area.top + dy, layout.value, metrics)
-    drag.value = { id, dx, dy, target: place, free }
+    board.value = movePointer(board.value, { x: ev.clientX, y: ev.clientY }, metrics.value)
   }
   const up = () => {
     window.removeEventListener('pointermove', move)
     window.removeEventListener('pointerup', up)
     window.removeEventListener('pointercancel', up)
-    const d = drag.value
-    drag.value = null
-    if (!moving) return
+    const r = release(board.value)
+    board.value = r.board
+    if (!r.wasDrag) return
     // The click that ends a drag must not activate the widget under the pointer.
     justDragged = true
     setTimeout(() => { justDragged = false })
-    if (d?.free) {
-      layout.value.places[id] = d.target
-    }
   }
   window.addEventListener('pointermove', move)
   window.addEventListener('pointerup', up)
@@ -137,27 +117,12 @@ const swallowClick = (e: MouseEvent) => {
   e.preventDefault()
 }
 
-const placed = computed(() => WIDGET_SPECS.map((spec) => {
-  const span = layout.value.spans[spec.id]
-  const place = layout.value.places[spec.id]
-  const size = sizeFor(spec.id, span)
-  const height = heightFor(spec.id, size, widthOf(span, metrics))
-  return {
-    spec,
-    size,
-    style: {
-      gridColumn: `${place.col} / span ${span}`,
-      marginTop: `${place.top}px`,
-      height: height === null ? undefined : `${height}px`
-    }
-  }
-}))
+const styleOf = (g: Geometry) => ({ gridColumn: `${g.col} / span ${g.span}`, marginTop: `${g.top}px`, height: `${g.height}px` })
+const dragging = computed(() => board.value.drag?.moving ? board.value.drag : null)
+const placed = computed(() => layout(board.value, metrics.value).map(g => ({ id: g.id, style: styleOf(g) })))
 const ghost = computed(() => {
-  const d = drag.value
-  if (!d) return null
-  const span = layout.value.spans[d.id]
-  const height = heightOf(d.id, sizeFor(d.id, span), widthOf(span, metrics))
-  return { free: d.free, style: { gridColumn: `${d.target.col} / span ${span}`, marginTop: `${d.target.top}px`, height: `${height}px` } }
+  const g = ghostOf(board.value, metrics.value)
+  return g && { free: g.free, style: styleOf(g) }
 })
 </script>
 
@@ -167,16 +132,15 @@ const ghost = computed(() => {
     <div ref="grid" data-testid="widget-grid" class="absolute inset-x-8 top-[60px] grid grid-cols-12 gap-x-6">
       <div
         v-for="w in placed"
-        :key="w.spec.id"
-        :data-widget="w.spec.id"
-        :data-size="w.size"
-        :data-dragging="drag?.id === w.spec.id"
-        :class="[WIDGET_SURFACE[w.spec.id], drag?.id === w.spec.id ? 'z-20 cursor-grabbing opacity-90 shadow-2xl' : 'cursor-grab', 'group relative row-start-1 touch-none select-none self-start overflow-hidden rounded-card']"
-        :style="[w.style, drag?.id === w.spec.id ? { transform: `translate(${drag.dx}px, ${drag.dy}px)` } : {}]"
-        @pointerdown="startDrag(w.spec.id, $event)"
+        :key="w.id"
+        :data-widget="w.id"
+        :data-dragging="dragging?.id === w.id"
+        :class="[widget(w.id).surface, dragging?.id === w.id ? 'z-20 cursor-grabbing opacity-90 shadow-2xl' : 'cursor-grab', 'group relative row-start-1 touch-none select-none self-start overflow-hidden rounded-card']"
+        :style="[w.style, dragging?.id === w.id ? { transform: `translate(${dragging.dx}px, ${dragging.dy}px)` } : {}]"
+        @pointerdown="startDrag(w.id, $event)"
         @click.capture="swallowClick"
       >
-        <HomeWidget :id="w.spec.id" :size="w.size" />
+        <HomeWidget :id="w.id" />
       </div>
       <div
         v-if="ghost"
