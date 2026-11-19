@@ -1,28 +1,5 @@
 <script setup lang="ts">
 const { mode } = useViewport()
-const audio = useAudio()
-const { songs } = await useSongs()
-
-// Background track: starts only once the page has fully loaded, so it never competes with first paint.
-// Browsers block sound until the visitor interacts, so a blocked attempt retries after the first gesture,
-// unless the visitor has already started something by then.
-onMounted(() => {
-  const song = () => songs.value.find(s => s.id === 'the-way-home')
-  const start = async () => {
-    const s = song()
-    if (!s || audio.state.playing) return
-    await audio.play(s)
-    if (!audio.state.playing) armGesture()
-  }
-  const armGesture = () => {
-    const events = ['click', 'keydown', 'touchend'] as const
-    const once = () => { events.forEach(e => removeEventListener(e, once)); start() }
-    events.forEach(e => addEventListener(e, once))
-  }
-  const afterLoad = () => setTimeout(start, 0)
-  if (document.readyState === 'complete') afterLoad()
-  else addEventListener('load', afterLoad, { once: true })
-})
 </script>
 
 <template>
